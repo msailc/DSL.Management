@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 
 import LogIn from './LogIn';
-import Home from './Home';
+import Home from './Home/Home';
 
 function App() {
   return (
