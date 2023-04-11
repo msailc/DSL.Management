@@ -1,11 +1,10 @@
 using System.Security.Claims;
+using DSLManagement.Controllers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using PagebaTask.Controllers;
-using PagebaTask.Models;
 
-namespace PagebaTask
+namespace DSLManagement
 {
     public class Startup
     {

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace PagebaTask.Models
+namespace DSLManagement
 {
     public class DataContext : DbContext
     {

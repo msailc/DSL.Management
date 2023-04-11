@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PagebaTask.Models;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace PagebaTask.Controllers
+namespace DSLManagement.Controllers
 {
     [ApiController]
     [Route("[controller]")]
