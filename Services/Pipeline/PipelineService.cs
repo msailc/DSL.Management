@@ -1,7 +1,14 @@
+using DSLManagement.Models;
+
 public class PipelineService : IPipelineService
 {
     public async Task<PipelineExecutionResult> ExecutePipelineAsync(Pipeline pipeline)
     {
+        if (pipeline == null)
+        {
+            throw new ArgumentNullException(nameof(pipeline));
+        }
+
         var stepResults = new List<PipelineStepResult>();
         bool success = true;
 
@@ -25,11 +32,13 @@ public class PipelineService : IPipelineService
     {
         try
         {
-            return new PipelineStepResult { Command = step.Command, Parameters = step.Parameters, Success = true };
+            var parameters = step.Parameters.ToDictionary(p => p.Name, p => p.Value);
+            return new PipelineStepResult { Command = step.Command, Parameters = parameters, Success = true };
         }
         catch (Exception ex)
         {
-            return new PipelineStepResult { Command = step.Command, Parameters = step.Parameters, Success = false, ErrorMessage = ex.Message };
+            var parameters = step.Parameters.ToDictionary(p => p.Name, p => p.Value);
+            return new PipelineStepResult { Command = step.Command, Parameters = parameters, Success = false, ErrorMessage = ex.Message };
         }
     }
 }

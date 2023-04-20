@@ -1,4 +1,6 @@
 using DSLManagement;
+using DSLManagement.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class PipelineRepository : IPipelineRepository
 {
@@ -11,7 +13,10 @@ public class PipelineRepository : IPipelineRepository
 
     public async Task<Pipeline> GetPipelineAsync(Guid id)
     {
-        return await _dbContext.Pipelines.FindAsync(id);
+        return await _dbContext.Pipelines
+            .Include(p => p.Steps)
+            .ThenInclude(s => s.Parameters)
+            .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task CreatePipelineAsync(Pipeline pipeline)
