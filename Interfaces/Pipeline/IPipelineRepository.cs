@@ -1,3 +1,5 @@
+using DSLManagement.Models;
+
 public interface IPipelineRepository
 {
     Task<Pipeline> GetPipelineAsync(Guid id);

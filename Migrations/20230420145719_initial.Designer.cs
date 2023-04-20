@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DSL_build_process_management.Migrations
+namespace DSLManagement.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230411160236_Update")]
-    partial class Update
+    [Migration("20230420145719_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,7 +20,7 @@ namespace DSL_build_process_management.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
 
-            modelBuilder.Entity("Pipeline", b =>
+            modelBuilder.Entity("DSLManagement.Models.Pipeline", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,7 +38,7 @@ namespace DSL_build_process_management.Migrations
                     b.ToTable("Pipelines");
                 });
 
-            modelBuilder.Entity("PipelineStep", b =>
+            modelBuilder.Entity("DSLManagement.Models.PipelineStep", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +48,7 @@ namespace DSL_build_process_management.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("PipelineId")
+                    b.Property<Guid>("PipelineId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -56,6 +56,30 @@ namespace DSL_build_process_management.Migrations
                     b.HasIndex("PipelineId");
 
                     b.ToTable("PipelineSteps");
+                });
+
+            modelBuilder.Entity("DSLManagement.Models.PipelineStepParameter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PipelineStepId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PipelineStepId");
+
+                    b.ToTable("PipelineStepParameters");
                 });
 
             modelBuilder.Entity("User", b =>
@@ -73,16 +97,36 @@ namespace DSL_build_process_management.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("PipelineStep", b =>
+            modelBuilder.Entity("DSLManagement.Models.PipelineStep", b =>
                 {
-                    b.HasOne("Pipeline", null)
+                    b.HasOne("DSLManagement.Models.Pipeline", "Pipeline")
                         .WithMany("Steps")
-                        .HasForeignKey("PipelineId");
+                        .HasForeignKey("PipelineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pipeline");
                 });
 
-            modelBuilder.Entity("Pipeline", b =>
+            modelBuilder.Entity("DSLManagement.Models.PipelineStepParameter", b =>
+                {
+                    b.HasOne("DSLManagement.Models.PipelineStep", "PipelineStep")
+                        .WithMany("Parameters")
+                        .HasForeignKey("PipelineStepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PipelineStep");
+                });
+
+            modelBuilder.Entity("DSLManagement.Models.Pipeline", b =>
                 {
                     b.Navigation("Steps");
+                });
+
+            modelBuilder.Entity("DSLManagement.Models.PipelineStep", b =>
+                {
+                    b.Navigation("Parameters");
                 });
 #pragma warning restore 612, 618
         }

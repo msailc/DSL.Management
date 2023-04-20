@@ -1,15 +1,18 @@
-public class Pipeline
+namespace DSLManagement.Models
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public List<PipelineStep> Steps { get; set; }
-    public PipelineStatus Status { get; set; }
-}
+    public class Pipeline
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public List<PipelineStep> Steps { get; set; }
+        public PipelineStatus Status { get; set; }
+    }
 
-public enum PipelineStatus
-{
-    Created,
-    Running,
-    Completed,
-    Failed
+    public enum PipelineStatus
+    {
+        Created,
+        Running,
+        Completed,
+        Failed
+    }
 }
