@@ -36,3 +36,144 @@
     transform: rotate(360deg);
   }
 }
+
+/* LOGIN PAGE */
+.login-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* LOGIN PAGE LEFT */
+.login-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background-color: #2d2d2d; /* GitHub background color */
+
+}
+
+.login-left h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.login-left p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.login-left button {
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  background-color: #ffffff;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.login-left a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  font-size: 1.2rem;
+}
+
+.login-left img {
+  height: 1.5rem;
+}
+
+/* LOGIN PAGE RIGHT */
+
+.login-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eee;
+}
+
+.login-right img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* NAVBAR */
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 2rem;
+  padding: 1rem;
+  background-color: #333;
+  color: #fff;
+}
+
+.navbar-left {
+  font-size: 1.5rem;
+}
+
+.navbar-right {
+  font-size: 1rem;
+}
+
+/* HOME PAGE LEFT SIDE */
+
+.home-container {
+  display: flex;
+  justify-content: space-between;
+  height: calc(100% - 4rem); /* subtract navbar height */
+}
+
+.home-left {
+  width: 20%;
+  height: calc(100% - 4rem);
+  padding: 2rem;
+  background-color: #eee;
+  display: flex;
+  flex-direction: column;
+}
+
+.pipelines-container {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pipeline-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30%;
+}
+
+.pipeline-header h2 {
+  font-size: 1.5rem;
+}
+
+.pipeline-list {
+  height: 70%;
+  padding: 1rem;
+}
+
+.pipeline-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pipeline-list li {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
