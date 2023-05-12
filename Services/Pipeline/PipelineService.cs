@@ -39,7 +39,7 @@ public class PipelineService : IPipelineService
 
             foreach (var step in pipeline.Steps)
             {
-                var result = await ExecutePipelineStepAsync(step);
+                var result = await ExecutePipelineStepAsync(step, localPath);
 
                 stepResults.Add(result);
 
@@ -56,17 +56,46 @@ public class PipelineService : IPipelineService
             return new PipelineExecutionResult { Success = success, StepResults = stepResults };
         }
 
-        private async Task<PipelineStepResult> ExecutePipelineStepAsync(PipelineStep step)
+        private async Task<PipelineStepResult> ExecutePipelineStepAsync(PipelineStep step, string localPath)
         {
-            try
+            var process = new Process
             {
-                var parameters = step.Parameters.ToDictionary(p => p.Name, p => p.Value);
-                return new PipelineStepResult { Command = step.Command, Parameters = parameters, Success = true };
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"/c {step.Command}",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = localPath
+                }
+            };
+
+            // Set the process environment variables
+            foreach (var parameter in step.Parameters)
+            {
+                process.StartInfo.EnvironmentVariables[parameter.Name] = parameter.Value;
             }
-            catch (Exception ex)
+
+            process.Start();
+
+            // Capture the output and wait for the process to exit
+            var output = await process.StandardOutput.ReadToEndAsync();
+            var error = await process.StandardError.ReadToEndAsync();
+            process.WaitForExit();
+
+            // Check if the process exited successfully
+            if (process.ExitCode == 0)
             {
-                var parameters = step.Parameters.ToDictionary(p => p.Name, p => p.Value);
-                return new PipelineStepResult { Command = step.Command, Parameters = parameters, Success = false, ErrorMessage = ex.Message };
+                return new PipelineStepResult { Command = step.Command, Parameters = step.Parameters.ToDictionary(p => p.Name, p => p.Value), Success = true };
+            }
+            else
+            {
+                return new PipelineStepResult { Command = step.Command, Parameters = step.
+                    
+                    Parameters.ToDictionary(p => p.Name, p => p.Value), Success = false, ErrorMessage = error };
             }
         }
+
     }
