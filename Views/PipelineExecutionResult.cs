@@ -11,3 +11,9 @@ public class PipelineStepResult
     public bool Success { get; set; }
     public string ErrorMessage { get; set; }
 }
+
+public class PipelineExecutionRequest
+{
+    public string GitUrl { get; set; }
+    public string LocalPath { get; set; }
+}

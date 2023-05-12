@@ -63,19 +63,15 @@ namespace DSLManagement.Controllers
             return NoContent();
         }
 
-        [HttpPost("{id}/execute")]
-        public async Task<ActionResult<PipelineExecutionResult>> ExecutePipeline(Guid id)
+        [HttpPost("{pipelineId}/execute")]
+        public async Task<ActionResult<PipelineExecutionResult>> ExecutePipeline(Guid pipelineId, [FromBody] PipelineExecutionRequest request)
         {
-            var pipeline = await _pipelineRepository.GetPipelineAsync(id);
-
-            if (pipeline == null)
-            {
-                return NotFound();
-            }
-
-            var result = await _pipelineService.ExecutePipelineAsync(pipeline);
+            var result = await _pipelineService.ExecutePipelineAsync(pipelineId, request.GitUrl);
 
             return result;
         }
+
+
+
     }
 }

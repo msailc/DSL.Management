@@ -1,0 +1,79 @@
+{
+	"info": {
+		"_postman_id": "257eafd7-a21b-4ebe-96c3-482e3daf7b36",
+		"name": "DSL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21866079"
+	},
+	"item": [
+		{
+			"name": "Create Pipeline",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"name\": \"My Pipeline\",\r\n\"steps\": [\r\n{\r\n\"command\": \"step1\",\r\n\"parameters\": {\r\n\"param1\": \"value1\",\r\n\"param2\": \"value2\"\r\n}\r\n},\r\n{\r\n\"command\": \"step2\",\r\n\"parameters\": {\r\n\"param3\": \"value3\",\r\n\"param4\": \"value4\"\r\n}\r\n}\r\n]\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5017/pipeline",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"pipeline"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Pipeline",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/pipeline/5c163695-4f73-4779-8b03-2d8a23587c5b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"pipeline",
+						"5c163695-4f73-4779-8b03-2d8a23587c5b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Execute pipeline",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/pipeline/f043baa8-417e-4114-84d7-fddc3817e8ad/execute",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"pipeline",
+						"f043baa8-417e-4114-84d7-fddc3817e8ad",
+						"execute"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
