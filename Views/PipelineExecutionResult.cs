@@ -15,5 +15,4 @@ public class PipelineStepResult
 public class PipelineExecutionRequest
 {
     public string GitUrl { get; set; }
-    public string LocalPath { get; set; }
 }
