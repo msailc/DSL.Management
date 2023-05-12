@@ -1,5 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar';
+import PipelineFetch from './PipelineFetch';
+
 
 function Home() {
   return (
@@ -12,11 +14,7 @@ function Home() {
               <h2>Recently Created Pipelines</h2>
             </div>
             <div className="pipeline-list">
-              <ul>
-                <li>Pipeline A</li>
-                <li>Pipeline B</li>
-                <li>Pipeline C</li>
-              </ul>
+            <PipelineFetch/>
             </div>
           </div>
           <div className="pipelines-container">
