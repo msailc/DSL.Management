@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar';
 import PipelineFetch from './PipelineFetch';
+import Console from "../Console";
 
 
 function Home() {
@@ -32,6 +33,8 @@ function Home() {
         </div>
         <div className="home-right">
           {/* Right side content goes here */}
+          <Console />
+          gdfgdfgdfgdfgfdgfd
         </div>
       </div>
     </div>
