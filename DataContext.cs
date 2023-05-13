@@ -11,6 +11,9 @@ namespace DSLManagement
     public DbSet<Pipeline> Pipelines { get; set; }
     public DbSet<PipelineStep> PipelineSteps { get; set; }
     public DbSet<PipelineStepParameter> PipelineStepParameters { get; set; }
+    public DbSet<PipelineExecution> PipelineExecutions { get; set; }
+    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Pipeline>()
@@ -30,6 +33,8 @@ namespace DSLManagement
 
         modelBuilder.Entity<PipelineStepParameter>()
             .HasKey(psp => psp.Id);
+        
+            
     }
 }
 }

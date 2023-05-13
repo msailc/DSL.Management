@@ -53,7 +53,42 @@ public class PipelineService : IPipelineService
             // Delete the local repository directory
             // Directory.Delete(localPath, true);
 
-            return new PipelineExecutionResult { Success = success, StepResults = stepResults };
+            var execution = new PipelineExecution
+            {
+                Id = Guid.NewGuid(),
+                PipelineId = pipelineId,
+                Pipeline = pipeline,
+                StartTime = DateTime.UtcNow,
+                EndTime = null,
+                Success = true,
+                StepExecutions = new List<PipelineStepExecution>(),
+                Output = "",
+                Error = ""
+            };
+
+            foreach (var step in pipeline.Steps)
+            {
+                var result = await ExecutePipelineStepAsync(step, localPath);
+                execution.StepExecutions.Add(new PipelineStepExecution
+                {
+                    Id = Guid.NewGuid(),
+                    PipelineStepId = step.Id,
+                    PipelineStep = step,
+                    StartTime = DateTime.UtcNow,
+                    EndTime = null,
+                    Success = result.Success,
+                    ErrorMessage = result.ErrorMessage
+                });
+
+                execution.Success = execution.Success && result.Success;
+            }
+
+            execution.EndTime = DateTime.UtcNow;
+
+            await _pipelineRepository.SavePipelineExecutionAsync(execution);
+
+            return new PipelineExecutionResult { Success = execution.Success, StepResults = stepResults };
+
         }
 
         private async Task<PipelineStepResult> ExecutePipelineStepAsync(PipelineStep step, string localPath)

@@ -21,6 +21,13 @@ namespace DSLManagement.Controllers
             _pipelineService = pipelineService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetPipelines()
+        {
+                var pipelines = await _pipelineRepository.GetPipelinesAsync();
+                return Ok(pipelines);
+        }
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<Pipeline>> GetPipeline(Guid id)
         {
@@ -70,8 +77,6 @@ namespace DSLManagement.Controllers
 
             return result;
         }
-
-
 
     }
 }
