@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "257eafd7-a21b-4ebe-96c3-482e3daf7b36",
+		"_postman_id": "e56c3191-165f-49c7-8546-b84348f8066d",
 		"name": "DSL",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21866079"
@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\"name\": \"My Pipeline\",\r\n\"steps\": [\r\n{\r\n\"command\": \"step1\",\r\n\"parameters\": {\r\n\"param1\": \"value1\",\r\n\"param2\": \"value2\"\r\n}\r\n},\r\n{\r\n\"command\": \"step2\",\r\n\"parameters\": {\r\n\"param3\": \"value3\",\r\n\"param4\": \"value4\"\r\n}\r\n}\r\n]\r\n}\r\n\r\n",
+					"raw": "{\r\n  \"name\": \"Next.js build pipeline\",\r\n  \"steps\": [\r\n    {\r\n      \"command\": \"npm install\",\r\n      \"parameters\": [\r\n        {\r\n          \"name\": \"NODE_ENV\",\r\n          \"value\": \"production\"\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -59,8 +59,17 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"gitUrl\" : \"https://github.com/msailc/scory.git\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:5017/pipeline/f043baa8-417e-4114-84d7-fddc3817e8ad/execute",
+					"raw": "http://localhost:5017/pipeline/1381c874-6fdc-4db8-9758-fd715a45a420/execute",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -68,8 +77,27 @@
 					"port": "5017",
 					"path": [
 						"pipeline",
-						"f043baa8-417e-4114-84d7-fddc3817e8ad",
+						"1381c874-6fdc-4db8-9758-fd715a45a420",
 						"execute"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Pipelines",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/pipeline",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"pipeline"
 					]
 				}
 			},

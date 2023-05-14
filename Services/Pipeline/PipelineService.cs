@@ -1,14 +1,25 @@
 using System.Diagnostics;
+using DSLManagement.Hubs;
 using DSLManagement.Models;
+using Microsoft.AspNetCore.SignalR;
 
 public class PipelineService : IPipelineService
 {
     private readonly IPipelineRepository _pipelineRepository;
-        
-    public PipelineService(IPipelineRepository pipelineRepository)
+    private readonly IHubContext<ConsoleHub> _consoleHubContext;
+
+    public PipelineService(IPipelineRepository pipelineRepository, IHubContext<ConsoleHub> consoleHubContext)
     {
         _pipelineRepository = pipelineRepository;
+        _consoleHubContext = consoleHubContext;
     }
+    
+    private async Task LogToConsole(string message)
+    {
+        await _consoleHubContext.Clients.All.SendAsync("ReceiveMessage", message);
+    }
+
+    
     private void CloneRepository(string gitUrl, string localPath)
         {
             // Construct the Git clone command
@@ -57,13 +68,12 @@ public class PipelineService : IPipelineService
             {
                 Id = Guid.NewGuid(),
                 PipelineId = pipelineId,
+                PipelineName = pipeline.Name,
                 Pipeline = pipeline,
                 StartTime = DateTime.UtcNow,
                 EndTime = null,
                 Success = true,
-                StepExecutions = new List<PipelineStepExecution>(),
-                Output = "",
-                Error = ""
+                StepExecutions = new List<PipelineStepExecution>()
             };
 
             foreach (var step in pipeline.Steps)
@@ -73,6 +83,7 @@ public class PipelineService : IPipelineService
                 {
                     Id = Guid.NewGuid(),
                     PipelineStepId = step.Id,
+                    PipelineStepCommand = step.Command,
                     PipelineStep = step,
                     StartTime = DateTime.UtcNow,
                     EndTime = null,
@@ -113,12 +124,28 @@ public class PipelineService : IPipelineService
                 process.StartInfo.EnvironmentVariables[parameter.Name] = parameter.Value;
             }
 
-            process.Start();
+            process.OutputDataReceived += async (sender, args) =>
+            {
+                if (!string.IsNullOrEmpty(args.Data))
+                {
+                    await LogToConsole(args.Data);
+                }
+            };
 
-            // Capture the output and wait for the process to exit
-            var output = await process.StandardOutput.ReadToEndAsync();
-            var error = await process.StandardError.ReadToEndAsync();
-            process.WaitForExit();
+            process.ErrorDataReceived += async (sender, args) =>
+            {
+                if (!string.IsNullOrEmpty(args.Data))
+                {
+                    await LogToConsole(args.Data);
+                }
+            };
+
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
+            // Wait for the process to exit
+            await process.WaitForExitAsync();
 
             // Check if the process exited successfully
             if (process.ExitCode == 0)
@@ -127,9 +154,7 @@ public class PipelineService : IPipelineService
             }
             else
             {
-                return new PipelineStepResult { Command = step.Command, Parameters = step.
-                    
-                    Parameters.ToDictionary(p => p.Name, p => p.Value), Success = false, ErrorMessage = error };
+                return new PipelineStepResult { Command = step.Command, Parameters = step.Parameters.ToDictionary(p => p.Name, p => p.Value), Success = false };
             }
         }
 
