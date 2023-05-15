@@ -4,17 +4,21 @@ import Socket from "./Socket";
 
 const Console = () => {
     const [output, setOutput] = useState("");
-    const [connection, setConnection] = useState(null);
     const consoleRef = useRef(null);
 
     useEffect(() => {
-        Socket.instance.on("ReceiveMessage", (data) => {
+        const handleMessageReceived = (data) => {
             setOutput((prevOutput) => prevOutput + data);
             consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
-        });
+        };
+
+        Socket.instance.on("ReceiveMessage", handleMessageReceived);
+
+        return () => {
+            // Clean up the event subscription when the component unmounts
+            Socket.instance.off("ReceiveMessage", handleMessageReceived);
+        };
     }, []);
-
-
 
     const clearOutput = () => {
         setOutput("");
@@ -50,4 +54,3 @@ const Console = () => {
 };
 
 export default Console;
-

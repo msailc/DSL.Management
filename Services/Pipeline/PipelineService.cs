@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using DSLManagement.Hubs;
 using DSLManagement.Models;
 using Microsoft.AspNetCore.SignalR;
@@ -20,142 +21,142 @@ public class PipelineService : IPipelineService
     }
 
     
-    private void CloneRepository(string gitUrl, string localPath)
+    private async void CloneRepository(string gitUrl, string localPath)
         {
             // Construct the Git clone command
             var gitCloneCommand = $"git clone {gitUrl} {localPath}";
+            
+            await LogToConsole($"Cloning repository from {gitUrl} to {localPath}");
 
             // Use Git command to clone the repository locally
             var processInfo = new ProcessStartInfo("cmd.exe", $"/c {gitCloneCommand}");
             Process.Start(processInfo)?.WaitForExit();
         }
 
-        public async Task<PipelineExecutionResult> ExecutePipelineAsync(Guid pipelineId, string gitUrl)
+    public async Task<PipelineExecutionResult> ExecutePipelineAsync(Guid pipelineId, string gitUrl)
+    {
+        var pipeline = await _pipelineRepository.GetPipelineAsync(pipelineId);
+
+        if (pipeline == null)
         {
-            var pipeline = await _pipelineRepository.GetPipelineAsync(pipelineId);
+            throw new ArgumentException($"Pipeline with ID {pipelineId} not found.");
+        }
 
-            if (pipeline == null)
-            {
-                throw new ArgumentException($"Pipeline with ID {pipelineId} not found.");
-            }
+        // Generate a local path for the repository
+        var localPath = $"C:\\Repositories\\{Guid.NewGuid()}";
 
-            // Generate a local path for the repository
-            var localPath = $"C:\\Repositories\\{Guid.NewGuid()}";
+        // Clone the repository to the local path
+        CloneRepository(gitUrl, localPath);
 
-            // Clone the repository to the local path
-            CloneRepository(gitUrl, localPath);
+        var stepResults = new List<PipelineStepResult>();
+        bool success = true;
 
-            var stepResults = new List<PipelineStepResult>();
-            bool success = true;
+        var execution = new PipelineExecution
+        {
+            Id = Guid.NewGuid(),
+            PipelineId = pipelineId,
+            PipelineName = pipeline.Name,
+            Pipeline = pipeline,
+            StartTime = DateTime.UtcNow,
+            EndTime = null,
+            Success = true,
+            StepExecutions = new List<PipelineStepExecution>()
+        };
 
-            foreach (var step in pipeline.Steps)
-            {
-                var result = await ExecutePipelineStepAsync(step, localPath);
-
-                stepResults.Add(result);
-
-                if (!result.Success)
-                {
-                    success = false;
-                    break;
-                }
-            }
-
-            // Delete the local repository directory
-            // Directory.Delete(localPath, true);
-
-            var execution = new PipelineExecution
+        foreach (var step in pipeline.Steps)
+        {
+            var result = await ExecutePipelineStepAsync(step, localPath);
+            execution.StepExecutions.Add(new PipelineStepExecution
             {
                 Id = Guid.NewGuid(),
-                PipelineId = pipelineId,
-                PipelineName = pipeline.Name,
-                Pipeline = pipeline,
+                PipelineStepId = step.Id,
+                PipelineStepCommand = step.Command,
+                PipelineStep = step,
                 StartTime = DateTime.UtcNow,
                 EndTime = null,
-                Success = true,
-                StepExecutions = new List<PipelineStepExecution>()
-            };
+                Success = result.Success,
+                ErrorMessage = result.ErrorMessage
+            });
 
-            foreach (var step in pipeline.Steps)
-            {
-                var result = await ExecutePipelineStepAsync(step, localPath);
-                execution.StepExecutions.Add(new PipelineStepExecution
-                {
-                    Id = Guid.NewGuid(),
-                    PipelineStepId = step.Id,
-                    PipelineStepCommand = step.Command,
-                    PipelineStep = step,
-                    StartTime = DateTime.UtcNow,
-                    EndTime = null,
-                    Success = result.Success,
-                    ErrorMessage = result.ErrorMessage
-                });
-
-                execution.Success = execution.Success && result.Success;
-            }
-
-            execution.EndTime = DateTime.UtcNow;
-
-            await _pipelineRepository.SavePipelineExecutionAsync(execution);
-
-            return new PipelineExecutionResult { Success = execution.Success, StepResults = stepResults };
-
+            success = success && result.Success;
+            stepResults.Add(result);
         }
 
-        private async Task<PipelineStepResult> ExecutePipelineStepAsync(PipelineStep step, string localPath)
+        execution.Success = success;
+        execution.EndTime = DateTime.UtcNow;
+
+        await _pipelineRepository.SavePipelineExecutionAsync(execution);
+
+        return new PipelineExecutionResult { Success = execution.Success, StepResults = stepResults };
+    }
+
+
+    private async Task<PipelineStepResult> ExecutePipelineStepAsync(PipelineStep step, string localPath)
+    {
+        var process = new Process
         {
-            var process = new Process
+            StartInfo = new ProcessStartInfo
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    Arguments = $"/c {step.Command}",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    WorkingDirectory = localPath
-                }
-            };
-
-            // Set the process environment variables
-            foreach (var parameter in step.Parameters)
-            {
-                process.StartInfo.EnvironmentVariables[parameter.Name] = parameter.Value;
+                FileName = "cmd.exe",
+                Arguments = $"/c {step.Command}",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WorkingDirectory = localPath
             }
+        };
 
-            process.OutputDataReceived += async (sender, args) =>
-            {
-                if (!string.IsNullOrEmpty(args.Data))
-                {
-                    await LogToConsole(args.Data);
-                }
-            };
-
-            process.ErrorDataReceived += async (sender, args) =>
-            {
-                if (!string.IsNullOrEmpty(args.Data))
-                {
-                    await LogToConsole(args.Data);
-                }
-            };
-
-            process.Start();
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-
-            // Wait for the process to exit
-            await process.WaitForExitAsync();
-
-            // Check if the process exited successfully
-            if (process.ExitCode == 0)
-            {
-                return new PipelineStepResult { Command = step.Command, Parameters = step.Parameters.ToDictionary(p => p.Name, p => p.Value), Success = true };
-            }
-            else
-            {
-                return new PipelineStepResult { Command = step.Command, Parameters = step.Parameters.ToDictionary(p => p.Name, p => p.Value), Success = false };
-            }
+        // Set the process environment variables
+        foreach (var parameter in step.Parameters)
+        {
+            process.StartInfo.EnvironmentVariables[parameter.Name] = parameter.Value;
         }
+
+        var outputBuilder = new StringBuilder();
+        var errorBuilder = new StringBuilder();
+
+        process.OutputDataReceived += async (sender, args) =>
+        {
+            if (!string.IsNullOrEmpty(args.Data))
+            {
+                outputBuilder.AppendLine(args.Data);
+                await LogToConsole(args.Data);
+            }
+        };
+
+        process.ErrorDataReceived += async (sender, args) =>
+        {
+            if (!string.IsNullOrEmpty(args.Data))
+            {
+                errorBuilder.AppendLine(args.Data);
+                await LogToConsole(args.Data);
+            }
+        };
+
+        process.Start();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+
+        // Wait for the process to exit
+        await process.WaitForExitAsync();
+
+        // Check if the process exited successfully
+        if (process.ExitCode == 0)
+        {
+            return new PipelineStepResult { Command = step.Command, Parameters = step.Parameters.ToDictionary(p => p.Name, p => p.Value), Success = true };
+        }
+        else
+        {
+            var errorMessage = errorBuilder.ToString();
+            var outputMessage = outputBuilder.ToString();
+            if (string.IsNullOrEmpty(outputMessage))
+            {
+                outputMessage = errorMessage;
+            }
+            return new PipelineStepResult { Command = step.Command, Parameters = step.Parameters.ToDictionary(p => p.Name, p => p.Value), Success = false, ErrorMessage = outputMessage };
+        }
+    }
+
 
     }

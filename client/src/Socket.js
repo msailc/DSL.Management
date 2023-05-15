@@ -17,12 +17,13 @@ class Socket {
             .withUrl("http://localhost:5017/consoleHub?connectionId=" + connectionId)
             .build();
 
-        this._connection.start().then(() => {
-            console.log("Connected")
-        });
+        this._connection.start()
     }
     on(event, callback) {
         this._connection.on(event, callback);
+    }
+    off(event, callback) {
+        this._connection.off(event, callback);
     }
     // emit(event, data) {
     //     this.socket.emit(event, data);
