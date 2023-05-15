@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from './Navbar';
 import PipelineFetch from './PipelineFetch';
 import Console from "../Console";
+import CreatePipeline from "./CreatePipeline";
 
 
 function Home() {
@@ -11,6 +12,7 @@ function Home() {
       <div className="home-container">
         <div className="home-left">
           <div className="pipelines-container">
+            <CreatePipeline/>
             <div className="pipeline-header">
               <h2>Recently Created Pipelines</h2>
             </div>
