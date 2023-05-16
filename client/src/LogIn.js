@@ -1,23 +1,156 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Register from "./Register.js";
+import axios from 'axios';
+
 // use app.css for styling
 import './App.css';
 
 function LogIn() {
+  const [showForm, setShowForm] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
+  const[logInEmail,setLogInEmail]=useState("");
+  const[logInPassword,setLogInPassword]=useState("");
+
+  const handleRegisterClick = () => {
+    setShowForm(true);
+  };
+  
+  const handleBackClick=()=>{
+    setShowForm(false);
+  }
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleLogInSubmit=(e)=>{
+    e.preventDefault();
+  }
+
+  const handleLogInEmailChange=(e)=>{
+    setLogInEmail(e.target.value);
+  }
+
+  const handleLogInPasswordChange=(e)=>{
+    setLogInPassword(e.target.value);
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (email.trim() === '' || password.trim() === '' || password.length < 4) {
+      setToastMessage(' Password needs to be at least 4 characters long.');
+      return;
+    }
+    const data = {
+      email: email,
+      password: password
+    };
+
+    axios.post('http://localhost:5017/auth/register', data)
+      .then((response) => {
+        console.log(response.data); // Handle the response data as needed
+      })
+      .catch((error) => {
+        console.error(error); // Handle any error that occurred
+      });
+
+    // Perform registration logic with email and password
+    // You can send the data to an API or handle it as needed
+    
+    // Reset the form
+    setEmail('');
+    setPassword('');
+  };
+
+  useEffect(() => {
+    let toastTimeout;
+
+    if (toastMessage) {
+      toastTimeout = setTimeout(() => {
+        setToastMessage('');
+      }, 5000);
+    }
+
+    return () => clearTimeout(toastTimeout);
+  }, [toastMessage]);
+
   return (
     <div className="login-container">
       <div className="login-left">
-        <h1>Welcome Back!</h1>
-        <p>Log in to your account</p>
-        <a href="https://github.com/login/oauth/authorize?client_id=<YOUR_CLIENT_ID>&scope=user">
-          <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" />
-          <span>Log in with GitHub</span>
-        </a>
-        <Register/>
+        {!showForm && (
+          <div>
+            <h1>DSL MANAGEMENT</h1>
+            <h2>Welcome Back!</h2>
+            <form onSubmit={handleLogInSubmit}>
+            <h2>Log In to your account</h2>
+            <div>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={handleLogInEmailChange}
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={handleLogInPasswordChange}
+              />
+            </div>
+            <button type="submit">Submit</button>
+            <p>New Here?</p>
+          </form>
+            
+            <div>
+              
+              <button onClick={handleRegisterClick}>Register</button>
+            </div>
+          </div>
+        )}
+        {showForm && (
+          <form onSubmit={handleSubmit}>
+            <h2>Register Your Account</h2>
+            <div>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={handleEmailChange}
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+            </div>
+            <button onClick={handleBackClick}>Back</button>
+            <button type="submit">Submit</button>
+          </form>
+        )}
+        {toastMessage && (
+          <div className="toast">
+            <p>{toastMessage}</p>
+          </div>
+        )}
       </div>
       <div className="login-right">
         <img src="https://assets.website-files.com/6294d502b5093e3965b91f4d/62ade1aafe6019c151ee7dea_leyre-71SHXwBLp5w-unsplash.png" alt="Login Image" />
+            {/* <a href="https://github.com/login/oauth/authorize?client_id=<YOUR_CLIENT_ID>&scope=user">
+              <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" />
+              <span>Log in with GitHub</span>
+            </a> */}
       </div>
     </div>
   );

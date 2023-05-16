@@ -4,6 +4,8 @@ const PipelineModal = () => {
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState('');
   const [pipelineCommands, setPipelineCommands] = useState('');
+  const [existingCommands, setExistingCommands]=useState([]);
+  const [showCommands,setShowCommands]=useState(false);
 
   const handleNewPipelineClick = () => {
     setShowModal(true);
@@ -28,14 +30,34 @@ const PipelineModal = () => {
     setPipelineCommands('');
     // Close the modal
     setShowModal(false);
+    setExistingCommands([]);
   };
   const closeModal=()=>{
     setName("");
     setPipelineCommands("");
     setShowModal(false);
+    setExistingCommands([]);
     
   }
-
+  
+  const addCommandHandler = () => {
+    if(pipelineCommands.trim()===""){
+        return;
+    }
+    setExistingCommands([...existingCommands, pipelineCommands]);
+    setShowCommands(true);
+    console.log(existingCommands);
+  };
+  const deleteLastCommandHandler = () => {
+    if(existingCommands.length<2){
+        setExistingCommands(existingCommands.slice(0, -1));
+        setShowCommands(false);
+    }
+    else{
+        setExistingCommands(existingCommands.slice(0, -1));
+    }
+    
+  };
   return (
     <div>
       <button onClick={handleNewPipelineClick}>New Pipeline</button>
@@ -52,17 +74,27 @@ const PipelineModal = () => {
                   value={name}
                   onChange={handleNameChange}
                 />
+                
               </div>
               <div>
                 <label htmlFor="pipelineCommands">Pipeline Commands:</label>
+                {showCommands && (<div> <ul>
+                    {existingCommands.map((command, index) => (
+                      <li key={index}>{command}</li>
+                    ))}
+                  </ul>
+                  <button type='button' onClick={deleteLastCommandHandler}>-</button>
+                  </div>)}
                 <input
                   type="text"
                   id="pipelineCommands"
                   value={pipelineCommands}
                   onChange={handlePipelineCommandsChange}
                 />
+                <button type='button' onClick={addCommandHandler}>+</button>
               </div>
               <div>
+              
                 <button type="submit">Create Pipeline</button>
                 <button onClick={closeModal}>Close</button>
               </div>
