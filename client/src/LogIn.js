@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Register from "./Register.js";
+import {useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-// use app.css for styling
 import './App.css';
 
 function LogIn() {
@@ -11,16 +9,21 @@ function LogIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [toastMessage, setToastMessage] = useState('');
-  const[logInEmail,setLogInEmail]=useState("");
-  const[logInPassword,setLogInPassword]=useState("");
+  const [logInEmail, setLogInEmail] = useState('');
+  const [logInPassword, setLogInPassword] = useState('');
+  const navigate = useNavigate(); // Use the useNavigate hook here
+
+  const showToast = (message) => {
+    alert(message);
+  };
 
   const handleRegisterClick = () => {
     setShowForm(true);
   };
-  
-  const handleBackClick=()=>{
+
+  const handleBackClick = () => {
     setShowForm(false);
-  }
+  };
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -30,17 +33,39 @@ function LogIn() {
     setPassword(e.target.value);
   };
 
-  const handleLogInSubmit=(e)=>{
+  const handleLogInSubmit = (e) => {
     e.preventDefault();
-  }
 
-  const handleLogInEmailChange=(e)=>{
+    if (logInEmail.trim() === '' || logInPassword.trim() === '') {
+      showToast('Invalid user credentials');
+      return;
+    }
+
+    const data = {
+      email: logInEmail,
+      password: logInPassword,
+    };
+
+    axios
+      .post('http://localhost:5017/auth/login', data)
+      .then(() => {
+        // Login successful
+        navigate('/home'); // Redirect to the home page
+      })
+      .catch(() => {
+        // Login failed
+        showToast('Invalid user credentials');
+      });
+  };
+
+  const handleLogInEmailChange = (e) => {
     setLogInEmail(e.target.value);
-  }
+  };
 
-  const handleLogInPasswordChange=(e)=>{
+  const handleLogInPasswordChange = (e) => {
     setLogInPassword(e.target.value);
-  }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -48,12 +73,14 @@ function LogIn() {
       setToastMessage(' Password needs to be at least 4 characters long.');
       return;
     }
+
     const data = {
       email: email,
-      password: password
+      password: password,
     };
 
-    axios.post('http://localhost:5017/auth/register', data)
+    axios
+      .post('http://localhost:5017/auth/register', data)
       .then((response) => {
         console.log(response.data); // Handle the response data as needed
       })
@@ -63,7 +90,7 @@ function LogIn() {
 
     // Perform registration logic with email and password
     // You can send the data to an API or handle it as needed
-    
+
     // Reset the form
     setEmail('');
     setPassword('');
@@ -94,7 +121,7 @@ function LogIn() {
               <input
                 type="email"
                 placeholder="Email"
-                value={email}
+                value={logInEmail}
                 onChange={handleLogInEmailChange}
               />
             </div>
@@ -102,7 +129,7 @@ function LogIn() {
               <input
                 type="password"
                 placeholder="Password"
-                value={password}
+                value={logInPassword}
                 onChange={handleLogInPasswordChange}
               />
             </div>
