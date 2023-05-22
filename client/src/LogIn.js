@@ -113,10 +113,12 @@ function LogIn() {
       <div className="login-left">
         {!showForm && (
           <div>
-            <h1>DSL MANAGEMENT</h1>
-            <h2>Welcome Back!</h2>
-            <form onSubmit={handleLogInSubmit}>
-            <h2>Log In to your account</h2>
+            
+              <h1>DSL MANAGEMENT</h1>
+              <h2>Welcome Back!</h2>
+              <form onSubmit={handleLogInSubmit}>
+              <h3>Log In to your account</h3>
+            
             <div>
               <input
                 type="email"
@@ -135,10 +137,9 @@ function LogIn() {
             </div>
             <button type="submit">Submit</button>
             <p>New Here?</p>
-          </form>
+            </form>
             
             <div>
-              
               <button onClick={handleRegisterClick}>Register</button>
             </div>
           </div>
@@ -162,8 +163,10 @@ function LogIn() {
                 onChange={handlePasswordChange}
               />
             </div>
-            <button onClick={handleBackClick}>Back</button>
+            <div className='buttons'> 
             <button type="submit">Submit</button>
+            <button onClick={handleBackClick}>Back</button>
+            </div>
           </form>
         )}
         {toastMessage && (
@@ -173,7 +176,7 @@ function LogIn() {
         )}
       </div>
       <div className="login-right">
-        <img src="https://assets.website-files.com/6294d502b5093e3965b91f4d/62ade1aafe6019c151ee7dea_leyre-71SHXwBLp5w-unsplash.png" alt="Login Image" />
+        <img src="https://external-preview.redd.it/juNisupeo3mP42FY1o2W5bb-b4lTNt36jtk1ygMsuE8.jpg?auto=webp&s=71834ca7b2f3ca216d975cb0e68887267a40ffad" alt="Login Image" />
             {/* <a href="https://github.com/login/oauth/authorize?client_id=<YOUR_CLIENT_ID>&scope=user">
               <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" />
               <span>Log in with GitHub</span>
