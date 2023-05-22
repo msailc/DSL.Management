@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const PipelineModal = () => {
-  const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState('');
   const [pipelineCommands, setPipelineCommands] = useState('');
   const [existingCommands, setExistingCommands] = useState([]);
   const [showCommands, setShowCommands] = useState(false);
 
-  const handleNewPipelineClick = () => {
-    setShowModal(true);
-  };
+
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -55,7 +52,6 @@ const PipelineModal = () => {
       setPipelineCommands('');
 
       // Close the modal
-      setShowModal(false);
       setExistingCommands([]);
     } catch (error) {
       console.error('API Error:', error);
@@ -63,12 +59,6 @@ const PipelineModal = () => {
     }
   };
 
-  const closeModal = () => {
-    setName('');
-    setPipelineCommands('');
-    setShowModal(false);
-    setExistingCommands([]);
-  };
 
   const addCommandHandler = () => {
     if (pipelineCommands.trim() === '') {
@@ -91,8 +81,6 @@ const PipelineModal = () => {
 
   return (
     <div>
-      <button onClick={handleNewPipelineClick}>New Pipeline</button>
-      {showModal && (
         <div className="modal">
           <div className="modal-content">
             <h2>Create New Pipeline</h2>
@@ -132,12 +120,10 @@ const PipelineModal = () => {
               </div>
               <div>
                 <button type="submit">Create Pipeline</button>
-                <button onClick={closeModal}>Close</button>
               </div>
             </form>
           </div>
         </div>
-      )}
     </div>
   );
 };

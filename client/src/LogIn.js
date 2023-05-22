@@ -48,8 +48,10 @@ function LogIn() {
 
     axios
       .post('http://localhost:5017/auth/login', data)
-      .then(() => {
+      .then((response) => {
         // Login successful
+        console.log(response.data);
+        localStorage.setItem('userToken', response.data.token);
         navigate('/home'); // Redirect to the home page
       })
       .catch(() => {
@@ -108,6 +110,14 @@ function LogIn() {
     return () => clearTimeout(toastTimeout);
   }, [toastMessage]);
 
+  useEffect(() => {
+    const userToken = localStorage.getItem('userToken');
+
+    if (userToken) {
+      navigate('/home'); // Redirect to the home page if userToken exists
+    }
+  }, []); 
+
   return (
     <div className="login-container">
       <div className="login-left">
@@ -135,7 +145,7 @@ function LogIn() {
                 onChange={handleLogInPasswordChange}
               />
             </div>
-            <button type="submit">Submit</button>
+            <button type="submit">Log In</button>
             <p>New Here?</p>
             </form>
             
@@ -164,7 +174,7 @@ function LogIn() {
               />
             </div>
             <div className='buttons'> 
-            <button type="submit">Submit</button>
+            <button type="submit">Register</button>
             <button onClick={handleBackClick}>Back</button>
             </div>
           </form>
