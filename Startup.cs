@@ -36,6 +36,7 @@ namespace DSLManagement
             services.AddScoped<IPipelineRepository, PipelineRepository>();
             services.AddScoped<IPipelineService, PipelineService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddIdentity<Models.User, IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();

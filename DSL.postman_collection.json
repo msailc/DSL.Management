@@ -160,6 +160,45 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get all Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/user/02e4df23-4e20-493b-a47b-4f187dca5497",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"user",
+						"02e4df23-4e20-493b-a47b-4f187dca5497"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
