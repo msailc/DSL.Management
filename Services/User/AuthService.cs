@@ -36,6 +36,11 @@ namespace DSLManagement.Services
             {
                 var user = await _userManager.FindByEmailAsync(request.Email);
                 var token = GenerateToken(user);
+
+                // Store the token in the user entity and save it in the database
+                user.Token = token;
+                await _userManager.UpdateAsync(user);
+
                 return new LoginResult { Succeeded = true, Token = token };
             }
             else
