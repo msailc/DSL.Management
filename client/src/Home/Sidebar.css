@@ -1,0 +1,29 @@
+.pipelines-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 80%;
+    padding-top: 40px;
+}
+
+.pipelines-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+}
+
+.pipelines-container li {
+    margin-bottom: 10px;
+}
+
+.pipelines-container a {
+    text-decoration: none;
+    color: #333333;
+}
+
+.pipelines-container button {
+    margin-top: auto;
+    width: 50%;
+}

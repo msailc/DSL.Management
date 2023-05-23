@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DSLManagement.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230420145719_initial")]
+    [Migration("20230513210404_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -27,7 +27,6 @@ namespace DSLManagement.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -38,6 +37,34 @@ namespace DSLManagement.Migrations
                     b.ToTable("Pipelines");
                 });
 
+            modelBuilder.Entity("DSLManagement.Models.PipelineExecution", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PipelineId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PipelineName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PipelineId");
+
+                    b.ToTable("PipelineExecutions");
+                });
+
             modelBuilder.Entity("DSLManagement.Models.PipelineStep", b =>
                 {
                     b.Property<Guid>("Id")
@@ -45,7 +72,6 @@ namespace DSLManagement.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Command")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("PipelineId")
@@ -58,6 +84,42 @@ namespace DSLManagement.Migrations
                     b.ToTable("PipelineSteps");
                 });
 
+            modelBuilder.Entity("DSLManagement.Models.PipelineStepExecution", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("PipelineExecutionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PipelineStepCommand")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PipelineStepId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PipelineExecutionId");
+
+                    b.HasIndex("PipelineStepId");
+
+                    b.ToTable("PipelineStepExecution");
+                });
+
             modelBuilder.Entity("DSLManagement.Models.PipelineStepParameter", b =>
                 {
                     b.Property<Guid>("Id")
@@ -65,14 +127,12 @@ namespace DSLManagement.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("PipelineStepId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -89,12 +149,22 @@ namespace DSLManagement.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("DSLManagement.Models.PipelineExecution", b =>
+                {
+                    b.HasOne("DSLManagement.Models.Pipeline", "Pipeline")
+                        .WithMany()
+                        .HasForeignKey("PipelineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pipeline");
                 });
 
             modelBuilder.Entity("DSLManagement.Models.PipelineStep", b =>
@@ -106,6 +176,21 @@ namespace DSLManagement.Migrations
                         .IsRequired();
 
                     b.Navigation("Pipeline");
+                });
+
+            modelBuilder.Entity("DSLManagement.Models.PipelineStepExecution", b =>
+                {
+                    b.HasOne("DSLManagement.Models.PipelineExecution", null)
+                        .WithMany("StepExecutions")
+                        .HasForeignKey("PipelineExecutionId");
+
+                    b.HasOne("DSLManagement.Models.PipelineStep", "PipelineStep")
+                        .WithMany()
+                        .HasForeignKey("PipelineStepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PipelineStep");
                 });
 
             modelBuilder.Entity("DSLManagement.Models.PipelineStepParameter", b =>
@@ -122,6 +207,11 @@ namespace DSLManagement.Migrations
             modelBuilder.Entity("DSLManagement.Models.Pipeline", b =>
                 {
                     b.Navigation("Steps");
+                });
+
+            modelBuilder.Entity("DSLManagement.Models.PipelineExecution", b =>
+                {
+                    b.Navigation("StepExecutions");
                 });
 
             modelBuilder.Entity("DSLManagement.Models.PipelineStep", b =>

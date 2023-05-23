@@ -1,0 +1,15 @@
+.home-container {
+    display: flex;
+}
+
+.home-left {
+    flex: 1;
+    height: 100vh;
+    background-color: #f2f2f2;
+}
+
+.home-right {
+    flex: 4;
+    height: 100vh;
+    background-color: #ffffff;
+}

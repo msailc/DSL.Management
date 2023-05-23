@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "e56c3191-165f-49c7-8546-b84348f8066d",
+		"name": "DSL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21866079"
+	},
+	"item": [
+		{
+			"name": "Create Pipeline",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Next.js build pipeline\",\r\n  \"steps\": [\r\n    {\r\n      \"command\": \"npm install\",\r\n      \"parameters\": [\r\n        {\r\n          \"name\": \"NODE_ENV\",\r\n          \"value\": \"production\"\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5017/pipeline",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"pipeline"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Pipeline",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/pipeline/5c163695-4f73-4779-8b03-2d8a23587c5b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"pipeline",
+						"5c163695-4f73-4779-8b03-2d8a23587c5b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Execute pipeline",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"gitUrl\" : \"https://github.com/msailc/scory.git\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5017/pipeline/1381c874-6fdc-4db8-9758-fd715a45a420/execute",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"pipeline",
+						"1381c874-6fdc-4db8-9758-fd715a45a420",
+						"execute"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Pipelines",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/pipeline",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"pipeline"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"neki2.covjek@mail.com\",\r\n  \"password\": \"Sifra123!\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5017/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"neki2.covjek@mail.com\",\r\n  \"password\": \"Sifra123!\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5017/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/user/02e4df23-4e20-493b-a47b-4f187dca5497",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"user",
+						"02e4df23-4e20-493b-a47b-4f187dca5497"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by username",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/user/username/neki2.covjek@mail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"user",
+						"username",
+						"neki2.covjek@mail.com"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

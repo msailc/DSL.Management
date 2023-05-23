@@ -10,6 +10,13 @@ public class PipelineRepository : IPipelineRepository
     {
         _dbContext = dbContext;
     }
+    
+    public async Task<IEnumerable<Pipeline>> GetPipelinesAsync()
+    {
+        return await _dbContext.Pipelines
+            .Include(p => p.Steps)
+            .ToListAsync();
+    }
 
     public async Task<Pipeline> GetPipelineAsync(Guid id)
     {
@@ -40,4 +47,11 @@ public class PipelineRepository : IPipelineRepository
             await _dbContext.SaveChangesAsync();
         }
     }
+    
+    public async Task SavePipelineExecutionAsync(PipelineExecution execution)
+    {
+        _dbContext.PipelineExecutions.Add(execution);
+        await _dbContext.SaveChangesAsync();
+    }
+    
 }

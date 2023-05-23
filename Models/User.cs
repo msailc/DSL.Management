@@ -1,6 +1,10 @@
- public class User
-    {
-        public int Id { get; set; }
-        public string Username { get; set; }
-    }
+﻿using Microsoft.AspNetCore.Identity;
 
+namespace DSLManagement.Models
+
+{
+    public class User : IdentityUser
+    {
+        public string Token { get; set; }
+    }
+}

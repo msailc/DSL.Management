@@ -1,9 +1,8 @@
-using System.Security.Claims;
-using System.Text.Json.Serialization;
-using DSLManagement.Controllers;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
+using DSLManagement.Hubs;
+using DSLManagement.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace DSLManagement
 {
@@ -18,37 +17,31 @@ namespace DSLManagement
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithOrigins("http://localhost:3000")
+                        .AllowCredentials();
+                });
+            });
             services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
             });
-
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<AuthController>();
             services.AddScoped<IPipelineRepository, PipelineRepository>();
             services.AddScoped<IPipelineService, PipelineService>();
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = "GitHub";
-            })
-            .AddCookie()
-            .AddOAuth("GitHub", options =>
-            {
-                options.ClientId = Configuration["GitHub:ClientId"];
-                options.ClientSecret = Configuration["GitHub:ClientSecret"];
-                options.CallbackPath = "/auth/callback";
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddIdentity<Models.User, IdentityRole>()
+                .AddEntityFrameworkStores<DataContext>()
+                .AddDefaultTokenProviders();
+            services.AddSignalR();
 
-                options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
-                options.TokenEndpoint = "https://github.com/login/oauth/access_token";
-                options.UserInformationEndpoint = "https://api.github.com/user";
-
-                options.ClaimActions.MapJsonKey(ClaimTypes.Name, "login");
-                options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
-                options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", ClaimValueTypes.Email);
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -60,14 +53,16 @@ namespace DSLManagement
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            app.UseCors("CorsPolicy");
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ConsoleHub>("/consoleHub");
             });
         }
     }

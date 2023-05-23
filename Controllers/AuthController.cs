@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OAuth;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using System.Threading.Tasks;
+using DSLManagement.Models;
+using DSLManagement.Services;
+using DSLManagement.Views;
 
 namespace DSLManagement.Controllers
 {
@@ -12,52 +12,41 @@ namespace DSLManagement.Controllers
     [Route("[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IAuthService _authService;
 
-        public AuthController(DataContext context)
+        public AuthController(IAuthService authService)
         {
-            _context = context;
+            _authService = authService;
         }
 
-        [HttpGet("login")]
-        public IActionResult Login(string returnUrl = "/")
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            return Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, "GitHub");
-        }
-
-        [HttpGet("logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Ok();
-        }
-
-        [HttpGet("callback")]
-        public async Task<IActionResult> Callback()
-        {
-            var authResult = await HttpContext.AuthenticateAsync("GitHub");
-            if (!authResult.Succeeded) return BadRequest("Authentication failed");
-
-            var username = authResult.Principal.FindFirstValue(ClaimTypes.Name);
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
-            if (user == null)
+            var result = await _authService.RegisterAsync(request);
+            if (result.Succeeded)
             {
-                user = new User { Username = username };
-                await _context.Users.AddAsync(user);
-                await _context.SaveChangesAsync();
+                return Ok(new RegisterResult{ Succeeded = true });
             }
-
-            var claims = new[]
+            else
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-            };
+                return BadRequest(new RegisterResult { Errors = result.Errors.Select(e => e.Description).ToList() });
+            }
+        }
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-            return Redirect("/");
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            var result = await _authService.LoginAsync(request);
+            if (result.Succeeded)
+            {
+                return Ok(new LoginResult { Succeeded = true, Token = result.Token });
+            }
+            else
+            {
+                return BadRequest(new LoginResult { Errors = result.Errors });
+            }
         }
     }
 }

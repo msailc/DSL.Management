@@ -1,0 +1,52 @@
+/* CSS for RegisterForm component */
+
+/* Container */
+.register-container {
+    text-align: center;
+  }
+  
+  /* Paragraph */
+  .register-container p {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  /* Button */
+  .register-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #337ab7;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Form */
+  .register-container form {
+    margin-top: 20px;
+  }
+  
+  /* Form input */
+  .register-container input {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Submit button */
+  .register-container button[type="submit"] {
+    background-color: #4caf50;
+  }
+  
+  /* Toast */
+  .register-container .toast {
+    background-color: #f44336;
+    color: #fff;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+  }
+  

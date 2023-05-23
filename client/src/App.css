@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+
 }
 
 .App-logo {
@@ -36,3 +37,128 @@
     transform: rotate(360deg);
   }
 }
+/* LOGIN PAGE */
+
+.login-container {
+  display: flex;
+  height: 100vh;
+}
+.login-title{
+text-decoration-style: white ;
+  }
+
+/* LOGIN PAGE LEFT */
+.login-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  
+}
+.login-left {
+  text-align: center;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: black;  /* GitHub background color */
+  color: white;
+}
+.login-left h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+.login-left h2 {
+  font-size: 24x;
+  margin-bottom: 20px;
+}
+.login-left form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-left form h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.login-left form div {
+  margin-bottom: 10px;
+}
+
+.login-left form input[type="email"],
+.login-left form input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.login-left form button[type="submit"],
+.login-left form button {
+  width: 50%;
+  padding: 8px;
+  background-color: #05173a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.login-left p {
+  margin-top: 20px;
+}
+
+.login-left form button[type="register"],
+.login-left form button {
+  width: 50%;
+  padding: 8px;
+  background-color: #05173a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.buttons{
+  display: flex;
+  gap: 10px;
+}
+
+/* LOGIN PAGE RIGHT */
+
+.login-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eee;
+}
+
+.login-right img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* NAVBAR */
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 2rem;
+  padding: 1rem;
+  background-color: #333;
+  color: #fff;
+}
+
+.navbar-left {
+  font-size: 1.5rem;
+}
+
+.navbar-right {
+  font-size: 1rem;
+}
+
