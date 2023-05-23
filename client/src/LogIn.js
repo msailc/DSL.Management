@@ -56,7 +56,7 @@ function LogIn() {
       })
       .catch(() => {
         // Login failed
-        showToast('Invalid user credentials');
+        setToastMessage('Invalid user credentials');
       });
   };
 
@@ -85,9 +85,12 @@ function LogIn() {
       .post('http://localhost:5017/auth/register', data)
       .then((response) => {
         console.log(response.data); // Handle the response data as needed
+        setShowForm(false);
+        setToastMessage("User successfuly registered");
       })
       .catch((error) => {
-        console.error(error); // Handle any error that occurred
+        console.error(error);
+        setToastMessage(' Username already exists') // Handle any error that occurred
       });
 
     // Perform registration logic with email and password
