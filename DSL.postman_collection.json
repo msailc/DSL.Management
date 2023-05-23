@@ -199,6 +199,27 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get User by username",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/user/username/neki2.covjek@mail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"user",
+						"username",
+						"neki2.covjek@mail.com"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

@@ -36,6 +36,19 @@ namespace DSLManagement.Controllers
             return user;
         }
         
+        [HttpGet("username/{username}")]
+        public async Task<ActionResult<User>> GetUserByUsername(string username)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+        }
+        
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)

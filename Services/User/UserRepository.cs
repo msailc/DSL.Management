@@ -21,6 +21,11 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users.FirstOrDefaultAsync(u => u.Id == id.ToString()); // Identity User is not guid
     }
+    
+    public async Task<User> GetUserByUsernameAsync(string username)
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+    }
 
 
     public async Task DeleteUserAsync(Guid id)
