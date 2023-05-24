@@ -42,6 +42,10 @@ namespace DSLManagement
         modelBuilder.Entity<IdentityUserRole<string>>()
             .HasNoKey();
         
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.Pipelines)
+            .WithOne(p => p.User)
+            .HasForeignKey(p => p.UserId);
             
     }
 }

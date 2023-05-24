@@ -220,6 +220,32 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get Pipeline Executions ( success = true or false )",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/pipeline/executions?success=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"pipeline",
+						"executions"
+					],
+					"query": [
+						{
+							"key": "success",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
