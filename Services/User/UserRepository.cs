@@ -19,7 +19,9 @@ public class UserRepository : IUserRepository
 
     public async Task<User> GetUserAsync(Guid id)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Id == id.ToString()); // Identity User is not guid
+        return await _context.Users
+            .Include(p => p.Pipelines)
+            .FirstOrDefaultAsync(u => u.Id == id.ToString()); // Identity User is not guid
     }
     
     public async Task<User> GetUserByUsernameAsync(string username)
