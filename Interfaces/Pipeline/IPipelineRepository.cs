@@ -8,5 +8,5 @@ public interface IPipelineRepository
     Task UpdatePipelineAsync(Pipeline pipeline);
     Task DeletePipelineAsync(Guid id);
     Task SavePipelineExecutionAsync(PipelineExecution execution);
-    
+    Task<IEnumerable<PipelineExecution>> GetPipelineExecutionListAsync(bool? success);
 }

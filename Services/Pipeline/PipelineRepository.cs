@@ -54,4 +54,22 @@ public class PipelineRepository : IPipelineRepository
         await _dbContext.SaveChangesAsync();
     }
     
+    public async Task<IEnumerable<PipelineExecution>> GetPipelineExecutionListAsync(bool? success)
+    {
+        IQueryable<PipelineExecution> query = _dbContext.PipelineExecutions;
+
+        if (success.HasValue)
+        {
+            query = query.Include(e => e.StepExecutions).ThenInclude(s => s.PipelineStep)
+                .Where(e => e.Success == success.Value);
+        }
+        else
+        {
+            query = query.Include(e => e.StepExecutions).ThenInclude(s => s.PipelineStep);
+        }
+
+        return await query.ToListAsync();
+    }
+
+
 }

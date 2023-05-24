@@ -77,6 +77,14 @@ namespace DSLManagement.Controllers
 
             return result;
         }
+        
+        [HttpGet("executions")]
+        public async Task<IActionResult> GetPipelineExecutions([FromQuery] bool? success)
+        {
+            var executions = await _pipelineRepository.GetPipelineExecutionListAsync(success);
+            return Ok(executions);
+        }
+
 
     }
 }
