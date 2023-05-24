@@ -11,5 +11,6 @@
 .home-right {
     flex: 4;
     height: 100vh;
+    padding: 35px;
     background-color: #ffffff;
 }
