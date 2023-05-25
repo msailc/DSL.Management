@@ -13,9 +13,7 @@ function LogIn() {
   const [logInPassword, setLogInPassword] = useState('');
   const navigate = useNavigate(); // Use the useNavigate hook here
 
-  const showToast = (message) => {
-    alert(message);
-  };
+
 
   const handleRegisterClick = () => {
     setShowForm(true);
@@ -37,7 +35,7 @@ function LogIn() {
     e.preventDefault();
 
     if (logInEmail.trim() === '' || logInPassword.trim() === '') {
-      showToast('Invalid user credentials');
+      setToastMessage('Invalid user credentials');
       return;
     }
 
@@ -71,11 +69,30 @@ function LogIn() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (email.trim() === '' || password.trim() === '' || password.length < 4) {
-      setToastMessage(' Password needs to be at least 4 characters long.');
+    if (email.trim() === '' ) {
+      setToastMessage(' Please enter a valid E-mail address');
       return;
     }
+    if(password.trim() === '' || password.length < 4){
+      setToastMessage("Password needs to be at least 4 characters long.");
+      return;
+    }
+    const specialChars = /[!@#$%^&*(),.?":{}|<>]/;
+    const uppercaseChars = /[A-Z]/;
+    const numericChars = /[0-9]/;
 
+  if (!specialChars.test(password)) {
+    setToastMessage("Password must contain at least 1 Special Character");
+    return;
+  }
+  if(!uppercaseChars.test(password)){
+    setToastMessage("Password must contain at least 1 Upper Case letter");
+    return;
+  }
+  if(!numericChars.test(password)){
+    setToastMessage("Password must contain at least 1 Number");
+    return;
+  }
     const data = {
       email: email,
       password: password,
