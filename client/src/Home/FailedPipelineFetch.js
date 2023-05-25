@@ -3,6 +3,12 @@ import axios from "axios";
 
 export default function FailedPipelineFetch() {
   const [pipelines, getPipelines] = useState([]);
+  const [gitUrl, setGitUrl] = useState("");
+
+  const handleSubmit = (event, pipelineId) => {
+    event.preventDefault();
+    handleExecutePipelineClick(pipelineId, gitUrl);
+  };
 
   useEffect(() => {
     axios
@@ -31,6 +37,28 @@ export default function FailedPipelineFetch() {
     );
   };
 
+  const handleExecutePipelineClick = (pipelineId, gitUrl) => {
+    const url = `http://localhost:5017/pipeline/${pipelineId}/execute`;
+    console.log(pipelineId, gitUrl);
+    const headers = {
+      "Content-Type": "application/json", // Specify the content type as JSON
+    };
+    const payload = {
+      gitUrl: gitUrl,
+    };
+
+    axios
+      .post(url, payload, { headers })
+      .then((res) => {
+        console.log("POST request successful");
+        // Handle the response if needed
+      })
+      .catch((err) => {
+        console.error("Error occurred during POST request:", err);
+        // Handle the error if needed
+      });
+  };
+
   return (
     <div className="pipeline-container">
       {pipelines.map((pipeline) => (
@@ -52,6 +80,22 @@ export default function FailedPipelineFetch() {
                 </li>
               ))}
             </ul>
+          )}
+          {!pipeline.collapsed && (
+            <form
+              onSubmit={(event) => handleSubmit(event, pipeline.pipelineId)}
+            >
+              <label>
+                GitUrl:
+                <input
+                  type="text"
+                  value={gitUrl}
+                  onChange={(e) => setGitUrl(e.target.value)}
+                  required
+                />
+              </label>
+              <button type="submit">Execute</button>
+            </form>
           )}
         </div>
       ))}

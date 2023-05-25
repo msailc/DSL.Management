@@ -14,7 +14,8 @@ export default function PipelineFetch() {
           Array.isArray(res.data.$values)
             ? res.data.$values.map((pipeline) => ({
                 ...pipeline,
-                collapsed: true
+                collapsed: true,
+                gitUrl: "" // Initialize gitUrl as an empty string
               }))
             : []
         );
@@ -32,18 +33,18 @@ export default function PipelineFetch() {
     );
   };
   
-  const handleExecutePipelineClick = (pipelineId) => {
+  const handleExecutePipelineClick = (pipelineId, gitUrl) => {
     const url = `http://localhost:5017/pipeline/${pipelineId}/execute`;
+    console.log(pipelineId,gitUrl);
     const headers = {
-    "Content-Type": "application/json", // Specify the content type as JSON
-  };
-  const payload = {
-    gitUrl: "https://github.com/msailc/DSLManagement.git" // Replace with the actual Git URL
-  };
-    console.log(pipelineId);
+      "Content-Type": "application/json", // Specify the content type as JSON
+    };
+    const payload = {
+      gitUrl: gitUrl
+    };
   
     axios
-      .post(url,payload,{headers})
+      .post(url, payload, { headers })
       .then((res) => {
         console.log("POST request successful");
         // Handle the response if needed
@@ -53,6 +54,16 @@ export default function PipelineFetch() {
         // Handle the error if needed
       });
   };
+  
+  const handleGitUrlChange = (pipelineId, event) => {
+    const gitUrl = event.target.value;
+    getPipelines((prevPipelines) =>
+      prevPipelines.map((pipeline) =>
+        pipeline.id === pipelineId ? { ...pipeline, gitUrl } : pipeline
+      )
+    );
+  };
+  
   return (
     <div className="pipeline-container">
       {pipelines.map((pipeline) => (
@@ -61,12 +72,27 @@ export default function PipelineFetch() {
             {pipeline.name}
           </button>
           {!pipeline.collapsed && (
-             <ul>
-             {pipeline.steps.$values.map((step) => (
-               <li key={step.id}>Command: {step.command}</li>
-             ))}
-             <button onClick={() => handleExecutePipelineClick(pipeline.id)}>button</button>
-           </ul>
+            <ul>
+              {pipeline.steps.$values.map((step) => (
+                <li key={step.id}>Command: {step.command}</li>
+              ))}
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  handleExecutePipelineClick(pipeline.id, pipeline.gitUrl);
+                }}
+              >
+                <label>gitUrl:
+                <input
+                  type="text"
+                  value={pipeline.gitUrl}
+                  onChange={(event) => handleGitUrlChange(pipeline.id, event)}
+                  
+                />
+                </label>
+                <button type="submit">Execute</button>
+              </form>
+            </ul>
           )}
         </div>
       ))}
