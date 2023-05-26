@@ -1,16 +1,28 @@
-.home-container {
+body {
+    overflow: hidden;
+  }
+  
+  .home-container {
     display: flex;
-}
+    height: 100vh;
+  }
 
-.home-left {
+  .home-left {
     flex: 1;
     height: 100vh;
-    background-color: #f2f2f2;
-}
-
+    background-color: #393E46;
+  }
+    
+  
+  /* Dodatni stil za uklanjanje skrol trake */
+  .home-right::-webkit-scrollbar {
+    display: none;
+  }
+  
 .home-right {
     flex: 4;
     height: 100vh;
     padding: 35px;
-    background-color: #ffffff;
+    background-color: #EEEEEE;
 }
+
