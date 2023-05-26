@@ -29,7 +29,7 @@ namespace DSLManagement
             });
             services.AddControllers().AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.ReferenceHandler = null;
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
             });
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));

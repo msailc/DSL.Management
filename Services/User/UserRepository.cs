@@ -22,6 +22,8 @@ public class UserRepository : IUserRepository
                 Id = u.Id,
                 Username = u.UserName,
                 Email = u.Email,
+                PipelinesCount = u.Pipelines.Count,
+                PipelineStepsCount = u.Pipelines.Sum(p => p.Steps.Count > 0 ? p.Steps.Count : 0),
                 Pipelines = u.Pipelines.Select(p => new UserPipelineView
                 {
                     PipelineId = p.Id,
@@ -37,7 +39,9 @@ public class UserRepository : IUserRepository
 
         var user = await _context.Users
             .Include(p => p.Pipelines)
-            .FirstOrDefaultAsync(u => u.Id == idString); 
+            .ThenInclude(s => s.Steps)
+            .ThenInclude(pr => pr.Parameters)
+            .FirstOrDefaultAsync(u => u.Id == idString);
 
         var userView = new UserView
         {
@@ -48,9 +52,23 @@ public class UserRepository : IUserRepository
             Pipelines = user.Pipelines.Select(p => new UserPipelineView
             {
                 PipelineId = p.Id,
-                Name = p.Name
+                Name = p.Name,
+                Steps = p.Steps.Select(s => new PipelineStepView
+                {
+                    StepId = s.Id,
+                    Command = s.Command,
+                    Parameters = s.Parameters.Select(pr => new PipelineStepParameterView
+                    {
+                        ParameterId = pr.Id,
+                        Name = pr.Name,
+                        Value = pr.Value
+                    }).ToList()
+                }).ToList()
             }).ToList()
         };
+
+        userView.PipelinesCount = userView.Pipelines.Count;
+        userView.PipelineStepsCount = userView.Pipelines.Sum(p => p.Steps.Count);
 
         return userView;
     }

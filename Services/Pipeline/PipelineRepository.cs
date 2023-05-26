@@ -71,14 +71,13 @@ public class PipelineRepository : IPipelineRepository
 
         return pipelineView;
     }
-
-
+    
     public async Task CreatePipelineAsync(Pipeline pipeline)
     {
         _dbContext.Pipelines.Add(pipeline);
         await _dbContext.SaveChangesAsync();
     }
-
+    
     public async Task UpdatePipelineAsync(Pipeline pipeline)
     {
         _dbContext.Pipelines.Update(pipeline);

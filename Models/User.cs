@@ -7,6 +7,5 @@ namespace DSLManagement.Models
     {
         public string Token { get; set; }
         public List<Pipeline> Pipelines { get; set; }
-
     }
 }
