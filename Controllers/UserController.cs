@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DSLManagement.Models;
 using DSLManagement.Services;
+using DSLManagement.Views;
 
 namespace DSLManagement.Controllers
 {
@@ -24,7 +25,7 @@ namespace DSLManagement.Controllers
         }
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(Guid id)
+        public async Task<ActionResult<UserView>> GetUser(Guid id)
         {
             var user = await _userRepository.GetUserAsync(id);
 
@@ -37,7 +38,7 @@ namespace DSLManagement.Controllers
         }
         
         [HttpGet("username/{username}")]
-        public async Task<ActionResult<User>> GetUserByUsername(string username)
+        public async Task<ActionResult<UserView>> GetUserByUsername(string username)
         {
             var user = await _userRepository.GetUserByUsernameAsync(username);
 
