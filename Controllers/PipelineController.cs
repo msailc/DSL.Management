@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DSLManagement.Models;
+using DSLManagement.Views;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -29,7 +30,7 @@ namespace DSLManagement.Controllers
         }
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pipeline>> GetPipeline(Guid id)
+        public async Task<ActionResult<PipelineView>> GetPipeline(Guid id)
         {
             var pipeline = await _pipelineRepository.GetPipelineAsync(id);
 

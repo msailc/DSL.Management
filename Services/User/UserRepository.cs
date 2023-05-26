@@ -22,7 +22,7 @@ public class UserRepository : IUserRepository
                 Id = u.Id,
                 Username = u.UserName,
                 Email = u.Email,
-                Pipelines = u.Pipelines.Select(p => new PipelineView
+                Pipelines = u.Pipelines.Select(p => new UserPipelineView
                 {
                     PipelineId = p.Id,
                     Name = p.Name
@@ -45,7 +45,7 @@ public class UserRepository : IUserRepository
             Username = user.UserName,
             Email = user.Email,
             Token = user.Token,
-            Pipelines = user.Pipelines.Select(p => new PipelineView
+            Pipelines = user.Pipelines.Select(p => new UserPipelineView
             {
                 PipelineId = p.Id,
                 Name = p.Name
@@ -65,7 +65,7 @@ public class UserRepository : IUserRepository
                 Id = u.Id,
                 Username = u.UserName,
                 Email = u.Email,
-                Pipelines = u.Pipelines.Select(p => new PipelineView
+                Pipelines = u.Pipelines.Select(p => new UserPipelineView
                 {
                     PipelineId = p.Id,
                     Name = p.Name

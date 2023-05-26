@@ -35,7 +35,7 @@ public class PipelineService : IPipelineService
 
     public async Task<PipelineExecutionResult> ExecutePipelineAsync(Guid pipelineId, string gitUrl)
     {
-        var pipeline = await _pipelineRepository.GetPipelineAsync(pipelineId);
+        var pipeline = await _pipelineRepository.GetPipelineForExecutionAsync(pipelineId);
 
         if (pipeline == null)
         {
