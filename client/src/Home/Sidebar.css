@@ -2,28 +2,94 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     height: 80%;
     padding-top: 40px;
+    background-color: #393E46;
+    display: flex; 
 }
-
-.pipelines-container ul {
+  
+  .pipelines-container ul {
     list-style-type: none;
     padding: 0;
-    margin: 0;
-    font-weight: bold;
-}
-
-.pipelines-container li {
-    margin-bottom: 10px;
-}
-
-.pipelines-container a {
+    margin: 20px 0; 
+  }
+  
+  .pipelines-container li {
+    margin-bottom: 15px;
+  }
+  
+  .pipelines-container a {
+    display: flex; 
+    align-items: center; 
     text-decoration: none;
-    color: #333333;
-}
-
-.pipelines-container button {
-    margin-top: auto;
+    color: white; 
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .pipelines-container a:hover {
+    background-color: #f5f5f5;
+    color: #333333; 
+  }
+  
+  .pipelines-container button {
+    margin-top: 20px;
     width: 50%;
-}
+    padding: 8px;
+    background-color: #E7F6F2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .pipelines-container button:hover {
+    background-color: #041033;
+  }
+  
+  .sidebar-text {
+    margin-left: 8px; /* Povećava razmak između ikonice i teksta */
+    font-size: 16px; /* Povećava veličinu teksta */
+  }
+  
+  /* Primjer stilizacije ikonica */
+  .sidebar-text svg {
+    color: #333333; 
+  }
+  
+  .pipelines-container button.logout-button {
+    margin-top: 20px;
+    width: 50%;
+    padding: 8px;
+    background-color: transparent;
+    color: white; 
+    border: 1px solid #cccccc; 
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex; 
+    align-items: center; 
+  }
+  
+  .pipelines-container button.logout-button:hover {
+    background-color: #cccccc; 
+    color: #333333;
+  }
+  
+  /* Dodana stilizacija ikonice pored gumba Log Out */
+  .pipelines-container button.logout-button svg {
+    margin-right: 5px; 
+  }
+  
+  .selected a {
+    background-color: white;
+    color: black;
+  }
+  
+  .sidebar-button:hover {
+    background-color: #e0e0e0;
+  }
+  

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './CreatePipeline.css';
 
 const PipelineModal = () => {
   const [name, setName] = useState('');
@@ -7,11 +8,10 @@ const PipelineModal = () => {
   const [existingCommands, setExistingCommands] = useState([]);
   const [showCommands, setShowCommands] = useState(false);
 
-
-
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
+
   const showToast = (message) => {
     alert(message);
   };
@@ -59,7 +59,6 @@ const PipelineModal = () => {
     }
   };
 
-
   const addCommandHandler = () => {
     if (pipelineCommands.trim() === '') {
       return;
@@ -81,51 +80,54 @@ const PipelineModal = () => {
 
   return (
     <div>
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Create New Pipeline</h2>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <label htmlFor="name">Name:</label>
-                <input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={handleNameChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="pipelineCommands">Pipeline Commands:</label>
-                {showCommands && (
-                  <div>
-                    <ul>
-                      {existingCommands.map((command, index) => (
-                        <li key={index}>{command}</li>
-                      ))}
-                    </ul>
-                    <button type="button" onClick={deleteLastCommandHandler}>
-                      -
-                    </button>
-                  </div>
-                )}
-                <input
-                  type="text"
-                  id="pipelineCommands"
-                  value={pipelineCommands}
-                  onChange={handlePipelineCommandsChange}
-                />
-                <button type="button" onClick={addCommandHandler}>
-                  +
-                </button>
-              </div>
-              <div>
-                <button type="submit">Create Pipeline</button>
-              </div>
-            </form>
-          </div>
+      <div className="modal show"> {/* Dodajte klasu "show" za prikaz modala */}
+        <div className="modal-content"> {/* Dodajte klasu "modal-content" za sadržaj modala */}
+          <h2>Create New Pipeline</h2>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="name">Name:</label>
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={handleNameChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="pipelineCommands">Pipeline Commands:</label>
+              {showCommands && (
+                <div>
+                  <ul>
+                    {existingCommands.map((command, index) => (
+                      <li key={index}>{command}</li>
+                    ))}
+                  </ul>
+                  <button type="button" onClick={deleteLastCommandHandler}>
+                    -
+                  </button>
+                </div>
+              )}
+              <input
+                type="text"
+                id="pipelineCommands"
+                value={pipelineCommands}
+                onChange={handlePipelineCommandsChange}
+              />
+              <button type="button" onClick={addCommandHandler}>
+                +
+              </button>
+            </div>
+            <div>
+              <button type="submit">Create Pipeline</button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
   );
 };
 
 export default PipelineModal;
+
+
+
