@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Console from "../Console";
 
 export default function FailedPipelineFetch() {
-  const [pipelines, getPipelines] = useState([]);
+  const [pipelines, setPipelines] = useState([]);
   const [gitUrl, setGitUrl] = useState("");
 
   const handleSubmit = (event, pipelineId) => {
@@ -15,20 +16,28 @@ export default function FailedPipelineFetch() {
       .get("http://localhost:5017/pipeline/executions?success=false")
       .then((res) => {
         console.log(res);
-        getPipelines(
-          Array.isArray(res.data.$values)
-            ? res.data.$values.map((pipeline) => ({
-                ...pipeline,
-                collapsed: true,
-              }))
-            : []
-        );
+        const uniquePipelines = removeDuplicatePipelines(res.data.$values);
+        console.log("Unique Pipelines:", uniquePipelines);
+        setPipelines(uniquePipelines);
       })
       .catch((err) => console.log(err));
   }, []);
 
+  const removeDuplicatePipelines = (pipelineExecutions) => {
+    const uniquePipelines = {};
+    pipelineExecutions.forEach((pipeline) => {
+      if (!uniquePipelines[pipeline.pipelineId]) {
+        uniquePipelines[pipeline.pipelineId] = {
+          ...pipeline,
+          collapsed: true,
+        };
+      }
+    });
+    return Object.values(uniquePipelines);
+  };
+
   const togglePipeline = (id) => {
-    getPipelines((prevPipelines) =>
+    setPipelines((prevPipelines) =>
       prevPipelines.map((pipeline) =>
         pipeline.id === id
           ? { ...pipeline, collapsed: !pipeline.collapsed }
@@ -41,7 +50,7 @@ export default function FailedPipelineFetch() {
     const url = `http://localhost:5017/pipeline/${pipelineId}/execute`;
     console.log(pipelineId, gitUrl);
     const headers = {
-      "Content-Type": "application/json", // Specify the content type as JSON
+      "Content-Type": "application/json",
     };
     const payload = {
       gitUrl: gitUrl,
@@ -59,6 +68,36 @@ export default function FailedPipelineFetch() {
       });
   };
 
+  const ErrorMessage = ({ message }) => {
+    const [showFullMessage, setShowFullMessage] = useState(false);
+
+    const toggleShowFullMessage = () => {
+      setShowFullMessage(!showFullMessage);
+    };
+
+    const toggleShowLessMessage = () => {
+      setShowFullMessage(false);
+    };
+
+    if (message.length > 30 && !showFullMessage) {
+      return (
+        <div>
+          <span>Error Message: {message.substring(0, 30)}...</span>
+          <button onClick={toggleShowFullMessage}>Show Full Message</button>
+        </div>
+      );
+    } else if (showFullMessage) {
+      return (
+        <div>
+          <span>Error Message: {message}</span>
+          <button onClick={toggleShowLessMessage}>Show Less</button>
+        </div>
+      );
+    } else {
+      return <span>Error Message: {message}</span>;
+    }
+  };
+
   return (
     <div className="pipeline-container">
       {pipelines.map((pipeline) => (
@@ -72,11 +111,7 @@ export default function FailedPipelineFetch() {
                 <li key={step.id}>
                   Command: {step.pipelineStepCommand}
                   <br />
-                  {step.errorMessage ? (
-                    <span>Error Message: {step.errorMessage}</span>
-                  ) : (
-                    <span>Error Message: none</span>
-                  )}
+                  <ErrorMessage message={step.errorMessage || "none"} />
                 </li>
               ))}
             </ul>
@@ -94,6 +129,9 @@ export default function FailedPipelineFetch() {
                   required
                 />
               </label>
+              <div>
+                <Console />
+              </div>
               <button type="submit">Execute</button>
             </form>
           )}

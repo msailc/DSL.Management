@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Console from "../Console";
 
-export default function FailedPipelineFetch() {
+export default function SuccessfulPipelineFetch() {
   const [pipelines, getPipelines] = useState([]);
   const [gitUrl, setGitUrl] = useState("");
 
@@ -15,17 +16,23 @@ export default function FailedPipelineFetch() {
       .get("http://localhost:5017/pipeline/executions?success=true")
       .then((res) => {
         console.log(res);
-        getPipelines(
-          Array.isArray(res.data.$values)
-            ? res.data.$values.map((pipeline) => ({
-                ...pipeline,
-                collapsed: true,
-              }))
-            : []
-        );
+        const uniquePipelines = removeDuplicatePipelines(res.data.$values);
+        console.log("Unique Pipelines:", uniquePipelines);
+        getPipelines(uniquePipelines);
       })
       .catch((err) => console.log(err));
   }, []);
+
+  const removeDuplicatePipelines = (pipelineExecutions) => {
+    const pipelineIdSet = new Set(); // Track encountered pipeline IDs
+    return pipelineExecutions.filter((pipeline) => {
+      if (!pipelineIdSet.has(pipeline.pipelineId)) {
+        pipelineIdSet.add(pipeline.pipelineId);
+        return true;
+      }
+      return false;
+    });
+  };
 
   const togglePipeline = (id) => {
     getPipelines((prevPipelines) =>
@@ -41,7 +48,7 @@ export default function FailedPipelineFetch() {
     const url = `http://localhost:5017/pipeline/${pipelineId}/execute`;
     console.log(pipelineId, gitUrl);
     const headers = {
-      "Content-Type": "application/json", // Specify the content type as JSON
+      "Content-Type": "application/json",
     };
     const payload = {
       gitUrl: gitUrl,
@@ -88,6 +95,9 @@ export default function FailedPipelineFetch() {
                   required
                 />
               </label>
+              <div>
+                <Console />
+              </div>
               <button type="submit">Execute</button>
             </form>
           )}

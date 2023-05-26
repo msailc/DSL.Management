@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./PipelineFetch.css"; // Import the CSS file
+import Console from "../Console";
 
 export default function PipelineFetch() {
   const [pipelines, getPipelines] = useState([]);
@@ -47,6 +48,7 @@ export default function PipelineFetch() {
       .post(url, payload, { headers })
       .then((res) => {
         console.log("POST request successful");
+        console.log(res);
         // Handle the response if needed
       })
       .catch((err) => {
@@ -90,6 +92,9 @@ export default function PipelineFetch() {
                   
                 />
                 </label>
+                <div>
+              <Console/>
+              </div>
                 <button type="submit">Execute</button>
               </form>
             </ul>

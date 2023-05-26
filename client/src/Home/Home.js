@@ -19,12 +19,12 @@ function Home() {
   const [showSuccessfulPipelines, setShowSuccessfulPipelines] = useState(false);
   const [showFailedPipelines, setShowFailedPipelines] = useState(false);
 
-  /*useEffect(() => {
+  useEffect(() => {
     const userToken = localStorage.getItem("userToken");
     if (!userToken) {
       navigate("/"); // Redirect to the "/log" page if "userToken" does not exist
     }
-  }, []);*/
+  }, []);
 
   const decodeToken = (token) => {
     if (!token) return null;
