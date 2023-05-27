@@ -10,6 +10,7 @@ import Sidebar from "./Sidebar";
 import "./Home.css";
 import "./Sidebar.css";
 import axios from "axios";
+import Profile from "./Home/Profile";
 
 function Home() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ function Home() {
   const [username, setUsername] = useState("");
   const [showSuccessfulPipelines, setShowSuccessfulPipelines] = useState(false);
   const [showFailedPipelines, setShowFailedPipelines] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   gittuseEffect(() => {
     const userToken = localStorage.getItem("userToken");
@@ -120,6 +122,13 @@ function Home() {
     setShowFailedPipelines(true);
     setShowHomePipelines(false);
   };
+  const handleProfileClick = () => {
+    setShowSuccessfulPipelines(false);
+    setShowPipelineModal(false);
+    setShowFailedPipelines(false);
+    setShowHomePipelines(false);
+    setShowProfile(true);
+  }
   const handleHomeClick = () => {
     setShowHomePipelines(true);
     setShowSuccessfulPipelines(false);
@@ -134,6 +143,7 @@ function Home() {
         <Sidebar
           handleSuccessfulPipelinesClick={handleSuccessfulPipelinesClick}
           handleNewPipelineClick={handleNewPipelineClick}
+            handleProfileClick={handleProfileClick}
           logOutHandler={logOutHandler}
           handleFailedPipelinesClick={handleFailedPipelinesClick}
           handleHomeClick={handleHomeClick}
@@ -144,6 +154,7 @@ function Home() {
           {showHomePipelines && <PipelineFetch />}
           {showSuccessfulPipelines && <SuccessfulPipelineFetch />}
           {showFailedPipelines && <FailedPipelineFetch />}
+          {showProfile && <Profile />}
         </div>
       </div>
     </div>
