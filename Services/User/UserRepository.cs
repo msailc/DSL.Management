@@ -83,10 +83,23 @@ public class UserRepository : IUserRepository
                 Id = u.Id,
                 Username = u.UserName,
                 Email = u.Email,
+                PipelinesCount = u.Pipelines.Count,
+                PipelineStepsCount = u.Pipelines.Sum(p => p.Steps.Count),
                 Pipelines = u.Pipelines.Select(p => new UserPipelineView
                 {
                     PipelineId = p.Id,
-                    Name = p.Name
+                    Name = p.Name,
+                    Steps = p.Steps.Select(s => new PipelineStepView
+                    {
+                        StepId = s.Id,
+                        Command = s.Command,
+                        Parameters = s.Parameters.Select(pr => new PipelineStepParameterView
+                        {
+                            ParameterId = pr.Id,
+                            Name = pr.Name,
+                            Value = pr.Value
+                        }).ToList()
+                    }).ToList()
                 }).ToList()
             })
             .FirstOrDefaultAsync<UserView>();
