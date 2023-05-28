@@ -228,7 +228,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Pipeline Executions ( success = true or false )",
+			"name": "Get All Pipeline Executions ( success = true or false )",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -248,6 +248,27 @@
 							"key": "success",
 							"value": "false"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Pipeline Execution",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5017/pipeline/executions/3adb2902-f096-472f-838d-e1abecb92645",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5017",
+					"path": [
+						"pipeline",
+						"executions",
+						"3adb2902-f096-472f-838d-e1abecb92645"
 					]
 				}
 			},

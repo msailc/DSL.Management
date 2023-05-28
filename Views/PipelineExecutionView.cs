@@ -10,6 +10,7 @@ public class PipelineExecutionView
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }
     public bool Success { get; set; }
+    public List<string> CommitTitles { get; set; }
     public List<PipelineStepExecutionView> StepExecutions { get; set; }
 }
 

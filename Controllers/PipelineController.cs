@@ -87,6 +87,16 @@ namespace DSLManagement.Controllers
             return Ok(executions);
         }
 
+        [HttpGet("executions/{id}")]
+        public async Task<ActionResult<PipelineExecutionView>> GetPipelineExecution(Guid id)
+        {
+            var execution = await _pipelineRepository.GetPipelineExecutionAsync(id);
+            if (execution == null)
+            {
+                return NotFound();
+            }
+            return execution;
+        }
 
     }
 }
