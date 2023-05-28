@@ -1,0 +1,26 @@
+.pipeline-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+}
+
+.pipeline {
+    margin-bottom: 10px;
+}
+
+.pipeline button {
+    background-color: #eaeaea;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    height: 50px;
+}
+
+.pipeline ul {
+    margin-top: 10px;
+    padding-left: 20px;
+}

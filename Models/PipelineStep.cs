@@ -1,3 +1,7 @@
+
+
+using Newtonsoft.Json;
+
 namespace DSLManagement.Models
 {
     public class PipelineStep
@@ -6,6 +10,7 @@ namespace DSLManagement.Models
         public string Command { get; set; }
         public List<PipelineStepParameter> Parameters { get; set; }
         public Guid PipelineId { get; set; }
+        [JsonIgnore]
         public Pipeline Pipeline { get; set; }
     }
 }

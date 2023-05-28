@@ -1,12 +1,13 @@
 ﻿using DSLManagement.Models;
+using DSLManagement.Views;
 
 namespace DSLManagement.Services
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetUsersAsync();
-        Task<User> GetUserAsync(Guid id);
-        Task<User> GetUserByUsernameAsync(string username);
+        Task<IEnumerable<UserView>> GetUsersAsync();
+        Task<UserView> GetUserAsync(Guid id);
+        Task<UserView> GetUserByUsernameAsync(string username);
         Task DeleteUserAsync(Guid id);
     }
 }

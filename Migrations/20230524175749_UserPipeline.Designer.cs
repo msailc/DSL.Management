@@ -3,6 +3,7 @@ using System;
 using DSLManagement;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DSLManagement.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230524175749_UserPipeline")]
+    partial class UserPipeline
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
@@ -261,7 +264,7 @@ namespace DSLManagement.Migrations
             modelBuilder.Entity("DSLManagement.Models.PipelineExecution", b =>
                 {
                     b.HasOne("DSLManagement.Models.Pipeline", "Pipeline")
-                        .WithMany("LastExecutions")
+                        .WithMany()
                         .HasForeignKey("PipelineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -308,8 +311,6 @@ namespace DSLManagement.Migrations
 
             modelBuilder.Entity("DSLManagement.Models.Pipeline", b =>
                 {
-                    b.Navigation("LastExecutions");
-
                     b.Navigation("Steps");
                 });
 

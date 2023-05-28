@@ -20,9 +20,6 @@ const Console = () => {
         };
     }, []);
 
-    const clearOutput = () => {
-        setOutput("");
-    };
 
     return (
         <div
@@ -48,7 +45,6 @@ const Console = () => {
             >
                 {output}
             </div>
-            <button onClick={clearOutput}>Clear Output</button>
         </div>
     );
 };

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DSLManagement.Models;
+using DSLManagement.Views;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -29,7 +30,7 @@ namespace DSLManagement.Controllers
         }
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pipeline>> GetPipeline(Guid id)
+        public async Task<ActionResult<PipelineView>> GetPipeline(Guid id)
         {
             var pipeline = await _pipelineRepository.GetPipelineAsync(id);
 
@@ -71,12 +72,21 @@ namespace DSLManagement.Controllers
         }
 
         [HttpPost("{pipelineId}/execute")]
-        public async Task<ActionResult<PipelineExecutionResult>> ExecutePipeline(Guid pipelineId, [FromBody] PipelineExecutionRequest request)
+        public async Task<ActionResult<PipelineExecutionResult>> ExecutePipeline(Guid pipelineId, [FromBody] PipelineExecutionRequest request, bool deleteRepositoryAfterExecution = false)
         {
-            var result = await _pipelineService.ExecutePipelineAsync(pipelineId, request.GitUrl);
+            var result = await _pipelineService.ExecutePipelineAsync(pipelineId, request.GitUrl, deleteRepositoryAfterExecution);
 
             return result;
         }
+
+        
+        [HttpGet("executions")]
+        public async Task<IActionResult> GetPipelineExecutions([FromQuery] bool? success)
+        {
+            var executions = await _pipelineRepository.GetPipelineExecutionListAsync(success);
+            return Ok(executions);
+        }
+
 
     }
 }
