@@ -3,6 +3,7 @@ using System.Text;
 using DSLManagement.Hubs;
 using DSLManagement.Models;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.VisualBasic.FileIO;
 
 public class PipelineService : IPipelineService
 {
@@ -23,17 +24,29 @@ public class PipelineService : IPipelineService
     
     private async void CloneRepository(string gitUrl, string localPath)
         {
-            // Construct the Git clone command
             var gitCloneCommand = $"git clone {gitUrl} {localPath}";
             
             await LogToConsole($"Cloning repository from {gitUrl} to {localPath}");
-
-            // Use Git command to clone the repository locally
+            
             var processInfo = new ProcessStartInfo("cmd.exe", $"/c {gitCloneCommand}");
             Process.Start(processInfo)?.WaitForExit();
         }
 
-    public async Task<PipelineExecutionResult> ExecutePipelineAsync(Guid pipelineId, string gitUrl)
+    private async void DeleteClonedFolder(string localPath)
+    {
+        try
+        {
+            FileSystem.DeleteDirectory(localPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
+            await LogToConsole($"Removed repository from {localPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+
+    public async Task<PipelineExecutionResult> ExecutePipelineAsync(Guid pipelineId, string gitUrl, bool deleteRepositoryAfterExecution)
     {
         var pipeline = await _pipelineRepository.GetPipelineForExecutionAsync(pipelineId);
 
@@ -86,6 +99,11 @@ public class PipelineService : IPipelineService
         execution.EndTime = DateTime.UtcNow;
 
         await _pipelineRepository.SavePipelineExecutionAsync(execution);
+        
+        if (deleteRepositoryAfterExecution)
+        {
+            DeleteClonedFolder(localPath);
+        }
 
         return new PipelineExecutionResult { Success = execution.Success, StepResults = stepResults };
     }

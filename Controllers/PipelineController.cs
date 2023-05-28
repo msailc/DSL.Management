@@ -72,12 +72,13 @@ namespace DSLManagement.Controllers
         }
 
         [HttpPost("{pipelineId}/execute")]
-        public async Task<ActionResult<PipelineExecutionResult>> ExecutePipeline(Guid pipelineId, [FromBody] PipelineExecutionRequest request)
+        public async Task<ActionResult<PipelineExecutionResult>> ExecutePipeline(Guid pipelineId, [FromBody] PipelineExecutionRequest request, bool deleteRepositoryAfterExecution = false)
         {
-            var result = await _pipelineService.ExecutePipelineAsync(pipelineId, request.GitUrl);
+            var result = await _pipelineService.ExecutePipelineAsync(pipelineId, request.GitUrl, deleteRepositoryAfterExecution);
 
             return result;
         }
+
         
         [HttpGet("executions")]
         public async Task<IActionResult> GetPipelineExecutions([FromQuery] bool? success)

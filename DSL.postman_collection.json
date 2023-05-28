@@ -69,7 +69,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5017/pipeline/1381c874-6fdc-4db8-9758-fd715a45a420/execute",
+					"raw": "http://localhost:5017/pipeline/1c56fa28-0697-46f1-bb69-34fb99a899eb/execute?deleteRepositoryAfterExecution=true",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -77,8 +77,14 @@
 					"port": "5017",
 					"path": [
 						"pipeline",
-						"1381c874-6fdc-4db8-9758-fd715a45a420",
+						"1c56fa28-0697-46f1-bb69-34fb99a899eb",
 						"execute"
+					],
+					"query": [
+						{
+							"key": "deleteRepositoryAfterExecution",
+							"value": "true"
+						}
 					]
 				}
 			},
