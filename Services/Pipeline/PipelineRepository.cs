@@ -49,13 +49,25 @@ public class PipelineRepository : IPipelineRepository
         var pipeline = await _dbContext.Pipelines
             .Include(p => p.Steps)
             .ThenInclude(pr => pr.Parameters)
+            .Include(p => p.LastExecutions)
             .FirstOrDefaultAsync(p => p.Id == id);
+
+        var lastExecutions = pipeline.LastExecutions
+            .OrderByDescending(e => e.StartTime)
+            .Take(5);
 
         var pipelineView = new PipelineView
         {
             Id = pipeline.Id,
             Name = pipeline.Name,
             UserId = pipeline.UserId,
+            LastExecutions = lastExecutions.Select(e => new PipelineExecutionSummaryView
+            {
+                Id = e.Id,
+                StartTime = e.StartTime,
+                EndTime = e.EndTime,
+                Success = e.Success
+            }).ToList(),
             Steps = pipeline.Steps?.Select(s => new PipelineStepView
             {
                 StepId = s.Id,
@@ -71,6 +83,7 @@ public class PipelineRepository : IPipelineRepository
 
         return pipelineView;
     }
+
     
     public async Task CreatePipelineAsync(Pipeline pipeline)
     {

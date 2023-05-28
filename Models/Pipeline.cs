@@ -7,7 +7,8 @@ namespace DSLManagement.Models
         public List<PipelineStep> Steps { get; set; }
         public PipelineStatus Status { get; set; }
         public string UserId { get; set; } 
-        public User User { get; set; } 
+        public User User { get; set; }
+        public List<PipelineExecution> LastExecutions { get; set; }
     }
 
     public enum PipelineStatus

@@ -5,6 +5,7 @@ public class PipelineView
     public Guid Id { get; set; }
     public string Name { get; set; }
     public string UserId { get; set; }
+    public List<PipelineExecutionSummaryView> LastExecutions { get; set; }
     public List<PipelineStepView> Steps { get; set; }
 }
 

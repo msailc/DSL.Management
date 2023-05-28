@@ -11,6 +11,14 @@ public class PipelineExecutionView
     public List<PipelineStepExecutionView> StepExecutions { get; set; }
 }
 
+public class PipelineExecutionSummaryView
+{
+    public Guid Id { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime? EndTime { get; set; }
+    public bool Success { get; set; }
+}
+
 public class PipelineStepExecutionView
 {
     public Guid Id { get; set; }
