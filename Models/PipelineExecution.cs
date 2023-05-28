@@ -17,6 +17,8 @@ public class CommitTitle
 {
     public Guid Id { get; set; }
     public string Title { get; set; }
+    public string Link { get; set; }
     public Guid PipelineExecutionId { get; set; }
     public PipelineExecution PipelineExecution { get; set; }
 }
+

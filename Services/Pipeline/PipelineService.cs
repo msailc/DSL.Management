@@ -45,9 +45,9 @@ public class PipelineService : IPipelineService
         }
     }
     
-    private List<string> FetchLastCommitTitles(string localPath, int count)
+    private List<(string, string)> FetchLastCommitTitles(string localPath, int count, string gitUrl)
     {
-        var gitLogCommand = $"git -C {localPath} log --pretty=format:\"%s\" -n {count}";
+        var gitLogCommand = $"git -C {localPath} log --pretty=format:\"%s%n%h\" -n {count}";
         var processInfo = new ProcessStartInfo("cmd.exe", $"/c {gitLogCommand}")
         {
             RedirectStandardOutput = true,
@@ -56,21 +56,32 @@ public class PipelineService : IPipelineService
         };
 
         var process = Process.Start(processInfo);
-        var commitTitles = new List<string>();
+        var commitInfo = new List<(string, string)>();
 
         if (process != null)
         {
             while (!process.StandardOutput.EndOfStream)
             {
-                var line = process.StandardOutput.ReadLine();
-                commitTitles.Add(line);
+                var commitTitle = process.StandardOutput.ReadLine();
+                var commitHash = process.StandardOutput.ReadLine();
+
+                var repositoryParts = gitUrl.TrimEnd('.').Split('/');
+                var repositoryOwner = repositoryParts[^2];
+                var repositoryNameWithGit = repositoryParts[^1];
+                var repositoryName = repositoryNameWithGit.Substring(0, repositoryNameWithGit.Length - 4); // Remove the ".git" extension
+
+                var commitLink = $"https://github.com/{repositoryOwner}/{repositoryName}/commit/{commitHash}";
+
+                commitInfo.Add((commitTitle, commitLink));
             }
 
             process.WaitForExit();
         }
 
-        return commitTitles;
+        return commitInfo;
     }
+
+
 
     public async Task<PipelineExecutionResult> ExecutePipelineAsync(Guid pipelineId, string gitUrl, bool deleteRepositoryAfterExecution)
     {
@@ -102,15 +113,18 @@ public class PipelineService : IPipelineService
             StepExecutions = new List<PipelineStepExecution>()
         };
         
-        // Fetch the last 5 commit titles
-        var commitTitles = FetchLastCommitTitles(localPath, 5);
+        // Fetch the last 5 commit titles and links
+        var commitInfo = FetchLastCommitTitles(localPath, 5, gitUrl);
 
-        // Update the PipelineExecution entity with the commit titles
-        execution.CommitTitles = commitTitles.Select(title => new CommitTitle
+
+        // Update the PipelineExecution entity with the commit titles and links
+        execution.CommitTitles = commitInfo.Select(commit => new CommitTitle
         {
             Id = Guid.NewGuid(),
-            Title = title
+            Title = commit.Item1,
+            Link = commit.Item2
         }).ToList();
+
 
         foreach (var step in pipeline.Steps)
         {

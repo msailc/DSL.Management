@@ -151,7 +151,7 @@ public class PipelineRepository : IPipelineRepository
             StartTime = pipelineExecution.StartTime,
             EndTime = pipelineExecution.EndTime,
             Success = pipelineExecution.Success,
-            CommitTitles = pipelineExecution.CommitTitles?.Select(c => c.Title).ToList(), // Add null check for CommitTitles
+            CommitTitles = pipelineExecution.CommitTitles?.Select(c => c.Title).ToList(),
             StepExecutions = pipelineExecution.StepExecutions?.Select(s => new PipelineStepExecutionView
             {
                 Id = s.Id,
