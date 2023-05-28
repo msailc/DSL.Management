@@ -44,7 +44,33 @@ public class PipelineService : IPipelineService
             Console.WriteLine(ex.Message);
         }
     }
+    
+    private List<string> FetchLastCommitTitles(string localPath, int count)
+    {
+        var gitLogCommand = $"git -C {localPath} log --pretty=format:\"%s\" -n {count}";
+        var processInfo = new ProcessStartInfo("cmd.exe", $"/c {gitLogCommand}")
+        {
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
 
+        var process = Process.Start(processInfo);
+        var commitTitles = new List<string>();
+
+        if (process != null)
+        {
+            while (!process.StandardOutput.EndOfStream)
+            {
+                var line = process.StandardOutput.ReadLine();
+                commitTitles.Add(line);
+            }
+
+            process.WaitForExit();
+        }
+
+        return commitTitles;
+    }
 
     public async Task<PipelineExecutionResult> ExecutePipelineAsync(Guid pipelineId, string gitUrl, bool deleteRepositoryAfterExecution)
     {
@@ -75,6 +101,16 @@ public class PipelineService : IPipelineService
             Success = true,
             StepExecutions = new List<PipelineStepExecution>()
         };
+        
+        // Fetch the last 5 commit titles
+        var commitTitles = FetchLastCommitTitles(localPath, 5);
+
+        // Update the PipelineExecution entity with the commit titles
+        execution.CommitTitles = commitTitles.Select(title => new CommitTitle
+        {
+            Id = Guid.NewGuid(),
+            Title = title
+        }).ToList();
 
         foreach (var step in pipeline.Steps)
         {

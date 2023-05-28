@@ -10,4 +10,13 @@ public class PipelineExecution
     public DateTime? EndTime { get; set; }
     public bool Success { get; set; }
     public List<PipelineStepExecution> StepExecutions { get; set; }
+    public List<CommitTitle> CommitTitles { get; set; }
+}
+
+public class CommitTitle
+{
+    public Guid Id { get; set; }
+    public string Title { get; set; }
+    public Guid PipelineExecutionId { get; set; }
+    public PipelineExecution PipelineExecution { get; set; }
 }

@@ -50,6 +50,7 @@ public class PipelineRepository : IPipelineRepository
             .Include(p => p.Steps)
             .ThenInclude(pr => pr.Parameters)
             .Include(p => p.LastExecutions)
+            .ThenInclude(c => c.CommitTitles)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         var lastExecutions = pipeline.LastExecutions
@@ -66,7 +67,8 @@ public class PipelineRepository : IPipelineRepository
                 Id = e.Id,
                 StartTime = e.StartTime,
                 EndTime = e.EndTime,
-                Success = e.Success
+                Success = e.Success,
+                CommitTitles = e.CommitTitles.Select(c => c.Title).ToList() 
             }).ToList(),
             Steps = pipeline.Steps?.Select(s => new PipelineStepView
             {
