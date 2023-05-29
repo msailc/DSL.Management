@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import './Profile.css';
 import axios from "axios";
+import UserPipelineFetch from "./UserPipelineFetch";
 
 export default function Profile() {
     const user = {
@@ -55,14 +56,18 @@ export default function Profile() {
             </div>
             <div className="divider"></div>
             <div className="title-container">
-                <div className="title">{pipelinesCount}</div>
-                <div className="title">{pipelineStepsCount}</div>
+                <div className="title">Pipelines Created: {pipelinesCount}</div>
+                <div className="title">Number of pipeline steps:{pipelineStepsCount}</div>
             </div>
             <div className="title-container">
-                <div className="title">{successfulPipelinesCount}</div>
-                <div className="title">{unsuccessfulPipelinesCount}</div>
+                <div className="title">successful pipelines:{successfulPipelinesCount}</div>
+                <div className="title">unsuccessful pipelines:{unsuccessfulPipelinesCount}</div>
             </div>
             <div className="divider"></div>
+            <div>
+            <h2>My pipelines:</h2>
+            <UserPipelineFetch/>
+            </div>
         </div>
     );
 }
