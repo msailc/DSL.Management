@@ -136,6 +136,8 @@ export default function PipelineFetch() {
                         {!pipeline.collapsed && (
                             <div className="pipeline-details">
                                 <div className="left-side">
+                                    <div>Author: {pipeline.userId}</div>
+
                                     Pipeline execution steps
                                     <ul>
                                         {pipeline.steps.$values.map((step) => (
