@@ -17,6 +17,8 @@ namespace DSLManagement
     public DbSet<PipelineStep> PipelineSteps { get; set; }
     public DbSet<PipelineStepParameter> PipelineStepParameters { get; set; }
     public DbSet<PipelineExecution> PipelineExecutions { get; set; }
+    public DbSet<CommitTitle> CommitTitles { get; set; }
+
     
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -46,7 +48,12 @@ namespace DSLManagement
             .HasMany(u => u.Pipelines)
             .WithOne(p => p.User)
             .HasForeignKey(p => p.UserId);
-            
+
+        modelBuilder.Entity<CommitTitle>()
+            .HasOne(ct => ct.PipelineExecution)
+            .WithMany(pe => pe.CommitTitles)
+            .HasForeignKey(ct => ct.PipelineExecutionId);
+        
     }
 }
 }

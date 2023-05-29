@@ -3,6 +3,7 @@ using System;
 using DSLManagement;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DSLManagement.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230528202706_Commits1")]
+    partial class Commits1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
@@ -21,9 +24,6 @@ namespace DSLManagement.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Link")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("PipelineExecutionId")
@@ -82,14 +82,9 @@ namespace DSLManagement.Migrations
                     b.Property<bool>("Success")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PipelineId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("PipelineExecutions");
                 });
@@ -304,13 +299,7 @@ namespace DSLManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DSLManagement.Models.User", "User")
-                        .WithMany("PipelineExecutions")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Pipeline");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DSLManagement.Models.PipelineStep", b =>
@@ -371,8 +360,6 @@ namespace DSLManagement.Migrations
 
             modelBuilder.Entity("DSLManagement.Models.User", b =>
                 {
-                    b.Navigation("PipelineExecutions");
-
                     b.Navigation("Pipelines");
                 });
 #pragma warning restore 612, 618

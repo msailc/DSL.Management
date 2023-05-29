@@ -15,4 +15,5 @@ public class PipelineStepResult
 public class PipelineExecutionRequest
 {
     public string GitUrl { get; set; }
+    public Guid UserId { get; set; }
 }

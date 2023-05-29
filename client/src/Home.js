@@ -134,7 +134,7 @@ function Home() {
     setShowSuccessfulPipelines(false);
     setShowPipelineModal(false);
     setShowFailedPipelines(false);
-  };
+  }
 
   return (
     <div>

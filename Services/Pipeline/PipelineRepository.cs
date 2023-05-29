@@ -11,7 +11,7 @@ public class PipelineRepository : IPipelineRepository
     {
         _dbContext = dbContext;
     }
-    
+
     public async Task<IEnumerable<PipelineView>> GetPipelinesAsync()
     {
         return await _dbContext.Pipelines
@@ -20,6 +20,8 @@ public class PipelineRepository : IPipelineRepository
             {
                 Id = p.Id,
                 Name = p.Name,
+                UserId = p.UserId,
+                UserName = p.User.UserName,
                 Steps = p.Steps.Select(s => new PipelineStepView
                 {
                     StepId = s.Id,
@@ -35,7 +37,6 @@ public class PipelineRepository : IPipelineRepository
             .ToListAsync<PipelineView>();
     }
     
-    // This method is used to retrieve a pipeline for execution. It includes the steps and parameters needed for execution.
     public async Task<Pipeline> GetPipelineForExecutionAsync(Guid id)
     {
         return await _dbContext.Pipelines
@@ -50,6 +51,8 @@ public class PipelineRepository : IPipelineRepository
             .Include(p => p.Steps)
             .ThenInclude(pr => pr.Parameters)
             .Include(p => p.LastExecutions)
+            .ThenInclude(c => c.CommitTitles)
+            .Include(p => p.User)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         var lastExecutions = pipeline.LastExecutions
@@ -61,12 +64,14 @@ public class PipelineRepository : IPipelineRepository
             Id = pipeline.Id,
             Name = pipeline.Name,
             UserId = pipeline.UserId,
+            UserName = pipeline.User.UserName,
             LastExecutions = lastExecutions.Select(e => new PipelineExecutionSummaryView
             {
                 Id = e.Id,
                 StartTime = e.StartTime,
                 EndTime = e.EndTime,
-                Success = e.Success
+                Success = e.Success,
+                CommitTitles = e.CommitTitles.Select(c => c.Title).ToList()
             }).ToList(),
             Steps = pipeline.Steps?.Select(s => new PipelineStepView
             {
@@ -84,13 +89,13 @@ public class PipelineRepository : IPipelineRepository
         return pipelineView;
     }
 
-    
+
     public async Task CreatePipelineAsync(Pipeline pipeline)
     {
         _dbContext.Pipelines.Add(pipeline);
         await _dbContext.SaveChangesAsync();
     }
-    
+
     public async Task UpdatePipelineAsync(Pipeline pipeline)
     {
         _dbContext.Pipelines.Update(pipeline);
@@ -103,13 +108,13 @@ public class PipelineRepository : IPipelineRepository
         _dbContext.Pipelines.Remove(pipeline);
         await _dbContext.SaveChangesAsync();
     }
-    
+
     public async Task SavePipelineExecutionAsync(PipelineExecution execution)
     {
         _dbContext.PipelineExecutions.Add(execution);
         await _dbContext.SaveChangesAsync();
     }
-    
+
     public async Task<IEnumerable<PipelineExecution>> GetPipelineExecutionListAsync(bool? success)
     {
         IQueryable<PipelineExecution> query = _dbContext.PipelineExecutions;
@@ -127,5 +132,45 @@ public class PipelineRepository : IPipelineRepository
         return await query.ToListAsync();
     }
 
+    public async Task<PipelineExecutionView> GetPipelineExecutionAsync(Guid id)
+    {
+        var pipelineExecution = await _dbContext.PipelineExecutions
+            .Include(e => e.StepExecutions)
+            .ThenInclude(s => s.PipelineStep)
+            .ThenInclude(p => p.Parameters)
+            .Include(e => e.CommitTitles)
+            .Include(e => e.Pipeline)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if (pipelineExecution == null)
+        {
+            return null;
+        }
+
+        var pipelineExecutionView = new PipelineExecutionView
+        {
+            Id = pipelineExecution.Id,
+            PipelineId = pipelineExecution.PipelineId,
+            PipelineName = pipelineExecution.Pipeline.Name, // Add null check for the pipeline object
+            StartTime = pipelineExecution.StartTime,
+            EndTime = pipelineExecution.EndTime,
+            Success = pipelineExecution.Success,
+            CommitTitles = pipelineExecution.CommitTitles?.Select(c => c.Title).ToList(),
+            StepExecutions = pipelineExecution.StepExecutions?.Select(s => new PipelineStepExecutionView
+            {
+                Id = s.Id,
+                PipelineStepId = s.PipelineStepId,
+                PipelineStepCommand = s.PipelineStep?.Command, // Add null check for the PipelineStep object
+                StartTime = s.StartTime,
+                EndTime = s.EndTime,
+                Success = s.Success,
+                ErrorMessage = s.ErrorMessage
+            }).ToList()
+        };
+
+        return pipelineExecutionView;
+    }
 
 }
+    
+    

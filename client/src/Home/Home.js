@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
@@ -19,12 +20,22 @@ function Home() {
   const [username, setUsername] = useState("");
   const [showSuccessfulPipelines, setShowSuccessfulPipelines] = useState(false);
   const [showFailedPipelines, setShowFailedPipelines] = useState(false);
-    const [showProfile, setShowProfile] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
-    const userToken = localStorage.getItem("userToken");
-    if (!userToken) {
-      navigate("/"); // Redirect to the "/log" page if "userToken" does not exist
+    const token = localStorage.getItem("userToken");
+    const decodedToken = decodeToken(token);
+
+    if (decodedToken) {
+      const name =
+        decodedToken[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        ];
+      setUsername(name);
+      localStorage.setItem("username", name);
+      fetchData(name);
+    } else {
+      navigate("/"); // Redirect to the "/log" page if the token is invalid or not present
     }
   }, []);
 
@@ -49,52 +60,19 @@ function Home() {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("userToken");
-    const decodedToken = decodeToken(token);
-
-    if (decodedToken) {
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const jsonPayload = decodeURIComponent(
-        Array.from(atob(base64))
-          .map(
-            (char) => "%" + ("00" + char.charCodeAt(0).toString(16)).slice(-2)
-          )
-          .join("")
+  const fetchData = async (username) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5017/user/username/${username}`
       );
+      const { id } = response.data;
 
-      const name =
-        decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-        ];
-      setUsername(name);
-      console.log(name);
-      localStorage.setItem("username", name);
-    } else {
-      // Handle the case when the token is invalid or not present
+      localStorage.setItem("userID", id);
+      handleHomeClick();
+    } catch (error) {
+      console.error("Error fetching user data:", error);
     }
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const username = localStorage.getItem("username");
-        const response = await axios.get(
-          `http://localhost:5017/user/username/${username}`
-        );
-        const { $id } = response.data;
-
-        localStorage.setItem("userID", $id);
-        console.log(localStorage.getItem("userID"));
-      } catch (error) {
-        // Handle error
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  };
 
   function logOutHandler() {
     localStorage.removeItem("userToken");
@@ -109,7 +87,6 @@ function Home() {
     setShowHomePipelines(false);
     setShowSuccessfulPipelines(false);
     setShowProfile(false);
-
   };
 
   const handleSuccessfulPipelinesClick = () => {
@@ -118,16 +95,16 @@ function Home() {
     setShowFailedPipelines(false);
     setShowHomePipelines(false);
     setShowProfile(false);
-
   };
+
   const handleFailedPipelinesClick = () => {
     setShowSuccessfulPipelines(false);
     setShowPipelineModal(false);
     setShowFailedPipelines(true);
     setShowHomePipelines(false);
     setShowProfile(false);
-
   };
+
   const handleHomeClick = () => {
     setShowHomePipelines(true);
     setShowSuccessfulPipelines(false);
@@ -136,13 +113,13 @@ function Home() {
     setShowProfile(false);
   };
 
-    const handleProfileClick = () => {
+  const handleProfileClick = () => {
     setShowProfile(true);
     setShowHomePipelines(false);
     setShowSuccessfulPipelines(false);
     setShowPipelineModal(false);
     setShowFailedPipelines(false);
-    };
+  };
 
   return (
     <div>
@@ -154,7 +131,7 @@ function Home() {
           logOutHandler={logOutHandler}
           handleFailedPipelinesClick={handleFailedPipelinesClick}
           handleHomeClick={handleHomeClick}
-            handleProfileClick={handleProfileClick}
+          handleProfileClick={handleProfileClick}
         />
         <div className="home-right">
           {/* Right side content goes here */}
@@ -162,7 +139,7 @@ function Home() {
           {showHomePipelines && <PipelineFetch />}
           {showSuccessfulPipelines && <SuccessfulPipelineFetch />}
           {showFailedPipelines && <FailedPipelineFetch />}
-            {showProfile && <Profile />}
+          {showProfile && <Profile />}
         </div>
       </div>
     </div>

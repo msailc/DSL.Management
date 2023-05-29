@@ -24,6 +24,16 @@ public class UserRepository : IUserRepository
                 Email = u.Email,
                 PipelinesCount = u.Pipelines.Count,
                 PipelineStepsCount = u.Pipelines.Sum(p => p.Steps.Count > 0 ? p.Steps.Count : 0),
+                SuccessPipelinesCount = u.PipelineExecutions.Count(e => e.Success),
+                FailedPipelinesCount = u.PipelineExecutions.Count(e => !e.Success),
+                PipelineExecutions = u.PipelineExecutions.Select(e => new UserPipelineExecutionView
+                {
+                    PipelineExecutionId = e.Id,
+                    PipelineName = e.Pipeline.Name,
+                    StartTime = e.StartTime,
+                    EndTime = e.EndTime,
+                    Success = e.Success,
+                }).ToList(),
                 Pipelines = u.Pipelines.Select(p => new UserPipelineView
                 {
                     PipelineId = p.Id,
@@ -41,6 +51,7 @@ public class UserRepository : IUserRepository
             .Include(p => p.Pipelines)
             .ThenInclude(s => s.Steps)
             .ThenInclude(pr => pr.Parameters)
+            .Include(e => e.PipelineExecutions)
             .FirstOrDefaultAsync(u => u.Id == idString);
 
         var userView = new UserView
@@ -48,7 +59,18 @@ public class UserRepository : IUserRepository
             Id = user.Id,
             Username = user.UserName,
             Email = user.Email,
-            Token = user.Token,
+            PipelinesCount = user.Pipelines.Count,
+            PipelineStepsCount = user.Pipelines.Sum(p => p.Steps.Count > 0 ? p.Steps.Count : 0),
+            SuccessPipelinesCount = user.PipelineExecutions.Count(e => e.Success),
+            FailedPipelinesCount = user.PipelineExecutions.Count(e => !e.Success),
+            PipelineExecutions = user.PipelineExecutions.Select(e => new UserPipelineExecutionView
+            {
+                PipelineExecutionId = e.Id,
+                PipelineName = e.Pipeline.Name,
+                StartTime = e.StartTime,
+                EndTime = e.EndTime,
+                Success = e.Success,
+            }).ToList(),
             Pipelines = user.Pipelines.Select(p => new UserPipelineView
             {
                 PipelineId = p.Id,
@@ -84,7 +106,17 @@ public class UserRepository : IUserRepository
                 Username = u.UserName,
                 Email = u.Email,
                 PipelinesCount = u.Pipelines.Count,
-                PipelineStepsCount = u.Pipelines.Sum(p => p.Steps.Count),
+                PipelineStepsCount = u.Pipelines.Sum(p => p.Steps.Count > 0 ? p.Steps.Count : 0),
+                SuccessPipelinesCount = u.PipelineExecutions.Count(e => e.Success),
+                FailedPipelinesCount = u.PipelineExecutions.Count(e => !e.Success),
+                PipelineExecutions = u.PipelineExecutions.Select(e => new UserPipelineExecutionView
+                {
+                    PipelineExecutionId = e.Id,
+                    PipelineName = e.Pipeline.Name,
+                    StartTime = e.StartTime,
+                    EndTime = e.EndTime,
+                    Success = e.Success,
+                }).ToList(),
                 Pipelines = u.Pipelines.Select(p => new UserPipelineView
                 {
                     PipelineId = p.Id,
