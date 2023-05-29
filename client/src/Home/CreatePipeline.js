@@ -38,6 +38,7 @@ const PipelineModal = () => {
     try {
       const payload = {
         name: name,
+        userId: localStorage.getItem("userID"),
         steps: existingCommands.map((command) => ({
           command: command,
           parameters: [],

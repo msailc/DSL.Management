@@ -83,9 +83,9 @@ function Home() {
         const response = await axios.get(
           `http://localhost:5017/user/username/${username}`
         );
-        const { $id } = response.data;
+        const { id } = response.data;
 
-        localStorage.setItem("userID", $id);
+        localStorage.setItem("userID", id);
         console.log(localStorage.getItem("userID"));
       } catch (error) {
         // Handle error
