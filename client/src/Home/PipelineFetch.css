@@ -4,7 +4,9 @@
     padding: 10px;
     border: 1px solid #eaeaea;
     border-radius: 10px;
+    overflow-y: auto;
 }
+
 
 .pipeline {
     margin-bottom: 10px;
@@ -12,7 +14,7 @@
 
 .pipeline button {
     background-color: #eaeaea;
-    border: none;
+    border: 1px solid black;
     padding: 5px 10px;
     cursor: pointer;
     width: 100%;
@@ -21,6 +23,80 @@
 }
 
 .pipeline ul {
+    list-style-type: none;
     margin-top: 10px;
     padding-left: 20px;
 }
+
+.pipeline-details {
+    display: flex;
+}
+
+.left-side {
+    flex: 1;
+}
+
+.right-side {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.execution-results {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.last-commits {
+    margin-bottom: 10px;
+}
+
+.execution-timestamps {
+    font-style: italic;
+}
+
+.console-container {
+    margin-top: 20px;
+    display: flex;
+}
+
+.console-left-side {
+    flex: 1;
+}
+
+.console-right-side {
+    flex: 1;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+}
+
+.form-row label {
+    margin-right: 10px;
+}
+
+.form-row button {
+    margin-left: 10px;
+}
+
+.console-header {
+    background-color: #f0f0f0;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.console-content {
+    flex: 1;
+    overflow-y: auto;
+    background-color: black;
+    color: white;
+    font-family: monospace;
+    padding: 10px;
+    height: 200px;
+    max-height: 200px; /* Set the desired fixed height for the console */
+}
+
+
