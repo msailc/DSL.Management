@@ -52,6 +52,7 @@ public class PipelineRepository : IPipelineRepository
             .ThenInclude(pr => pr.Parameters)
             .Include(p => p.LastExecutions)
             .ThenInclude(c => c.CommitTitles)
+            .Include(p => p.User)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         var lastExecutions = pipeline.LastExecutions
@@ -138,6 +139,7 @@ public class PipelineRepository : IPipelineRepository
             .ThenInclude(s => s.PipelineStep)
             .ThenInclude(p => p.Parameters)
             .Include(e => e.CommitTitles)
+            .Include(e => e.Pipeline)
             .FirstOrDefaultAsync(e => e.Id == id);
 
         if (pipelineExecution == null)
@@ -149,7 +151,7 @@ public class PipelineRepository : IPipelineRepository
         {
             Id = pipelineExecution.Id,
             PipelineId = pipelineExecution.PipelineId,
-            PipelineName = pipelineExecution.Pipeline?.Name, // Add null check for the pipeline object
+            PipelineName = pipelineExecution.Pipeline.Name, // Add null check for the pipeline object
             StartTime = pipelineExecution.StartTime,
             EndTime = pipelineExecution.EndTime,
             Success = pipelineExecution.Success,
