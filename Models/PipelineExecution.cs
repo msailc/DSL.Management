@@ -11,6 +11,8 @@ public class PipelineExecution
     public bool Success { get; set; }
     public List<PipelineStepExecution> StepExecutions { get; set; }
     public List<CommitTitle> CommitTitles { get; set; }
+    public string UserId { get; set; } 
+    public User User { get; set; }
 }
 
 public class CommitTitle

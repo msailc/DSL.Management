@@ -83,7 +83,7 @@ public class PipelineService : IPipelineService
 
 
 
-    public async Task<PipelineExecutionResult> ExecutePipelineAsync(Guid pipelineId, string gitUrl, bool deleteRepositoryAfterExecution)
+    public async Task<PipelineExecutionResult> ExecutePipelineAsync(Guid pipelineId, string gitUrl,Guid userId, bool deleteRepositoryAfterExecution)
     {
         var pipeline = await _pipelineRepository.GetPipelineForExecutionAsync(pipelineId);
 
@@ -110,6 +110,7 @@ public class PipelineService : IPipelineService
             StartTime = DateTime.UtcNow,
             EndTime = null,
             Success = true,
+            UserId = pipeline.UserId,
             StepExecutions = new List<PipelineStepExecution>()
         };
         

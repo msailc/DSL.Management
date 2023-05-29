@@ -20,6 +20,8 @@ public class PipelineRepository : IPipelineRepository
             {
                 Id = p.Id,
                 Name = p.Name,
+                UserId = p.UserId,
+                UserName = p.User.UserName,
                 Steps = p.Steps.Select(s => new PipelineStepView
                 {
                     StepId = s.Id,
@@ -34,8 +36,7 @@ public class PipelineRepository : IPipelineRepository
             })
             .ToListAsync<PipelineView>();
     }
-
-    // This method is used to retrieve a pipeline for execution. It includes the steps and parameters needed for execution.
+    
     public async Task<Pipeline> GetPipelineForExecutionAsync(Guid id)
     {
         return await _dbContext.Pipelines
@@ -62,6 +63,7 @@ public class PipelineRepository : IPipelineRepository
             Id = pipeline.Id,
             Name = pipeline.Name,
             UserId = pipeline.UserId,
+            UserName = pipeline.User.UserName,
             LastExecutions = lastExecutions.Select(e => new PipelineExecutionSummaryView
             {
                 Id = e.Id,
@@ -140,7 +142,7 @@ public class PipelineRepository : IPipelineRepository
 
         if (pipelineExecution == null)
         {
-            return null; // Or handle the case where the pipeline execution with the given id is not found
+            return null;
         }
 
         var pipelineExecutionView = new PipelineExecutionView

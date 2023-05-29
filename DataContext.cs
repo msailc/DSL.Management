@@ -53,6 +53,7 @@ namespace DSLManagement
             .HasOne(ct => ct.PipelineExecution)
             .WithMany(pe => pe.CommitTitles)
             .HasForeignKey(ct => ct.PipelineExecutionId);
+        
     }
 }
 }

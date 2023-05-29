@@ -15,9 +15,9 @@ namespace DSLManagement.Hubs
             _pipelineService = pipelineService;
         }
 
-        public async Task Execute(string gitUrl, Guid pipelineId, bool deleteRepositoryAfterExecution = false)
+        public async Task Execute(string gitUrl, Guid pipelineId,Guid userId, bool deleteRepositoryAfterExecution = false)
         {
-            var pipelineExecution = await _pipelineService.ExecutePipelineAsync(pipelineId, gitUrl, deleteRepositoryAfterExecution);
+            var pipelineExecution = await _pipelineService.ExecutePipelineAsync(pipelineId, gitUrl, userId, deleteRepositoryAfterExecution);
 
             foreach (var stepResult in pipelineExecution.StepResults)
             {
