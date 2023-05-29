@@ -1,110 +1,84 @@
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0; 
-    animation: modal-show 0.3s ease forwards; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-  
-  .modal-show {
-    opacity: 1; 
-  }
-  
-  .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 30px;
-    max-width: 400px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform: translateY(-50%); 
-    animation: modal-slide 0.3s ease forwards; 
-  }
-  
-  @keyframes modal-show {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  
-  @keyframes modal-slide {
-    from {
-      transform: translateY(-50%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-  
+
   .modal h2 {
-    margin-top: 0;
+    margin-top: 40px;
+    margin-bottom: 40px;
   }
   
-  .modal form div {
-    margin-bottom: 10px;
-  }
-  
-  .modal label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  .modal input[type="text"] {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .modal ul {
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 10px;
-  }
-  
-  .modal li {
-    margin-bottom: 5px;
-  }
-  
-  .modal button {
-    padding: 8px 12px;
-    background-color: #E7F6F2; /* Promijenjena boja pozadine */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .modal button[type="submit"] {
-    background-color: #041033; /* Promijenjena boja pozadine */
-  }
-  
-  .modal button[type="button"] {
-    background-color:#393E46; /* Promijenjena boja pozadine */
-    margin-left: 5px;
-  }
-  
-  .modal button:hover {
-    opacity: 0.8;
-    background-color: #041033; /* Promijenjena boja pozadine prilikom hovera */
-  }
-  
-  .modal button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
+.modal form div {
+  margin-bottom: 20px; 
+}
+
+.modal label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.modal input[type="text"] {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px; 
+}
+
+.modal ul {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.modal li {
+  margin-bottom: 5px;
+}
+
+.modal button {
+  padding: 8px 12px;
+  background-color: #E7F6F2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.modal button[type="submit"] {
+  background-color: #041033;
+}
+
+.modal button[type="button"] {
+  background-color: #393E46;
+  margin-left: 5px;
+}
+
+.modal button:hover {
+  opacity: 0.8;
+  background-color: #041033;
+}
+
+.modal button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal button.name-button {
+  padding: 8px 12px;
+  background-color: #393E46 !important;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.modal button.name-button:hover {
+  opacity: 0.8;
+  background-color: #041033 !important;
+}
