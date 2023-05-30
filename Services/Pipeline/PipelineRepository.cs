@@ -71,7 +71,11 @@ public class PipelineRepository : IPipelineRepository
                 StartTime = e.StartTime,
                 EndTime = e.EndTime,
                 Success = e.Success,
-                CommitTitles = e.CommitTitles.Select(c => c.Title).ToList()
+                CommitTitles = e.CommitTitles.Select(c => new CommitTitleView
+                {
+                    Title = c.Title,
+                    CommitUrl = c.CommitUrl
+                }).ToList()
             }).ToList(),
             Steps = pipeline.Steps?.Select(s => new PipelineStepView
             {
@@ -88,7 +92,6 @@ public class PipelineRepository : IPipelineRepository
 
         return pipelineView;
     }
-
 
     public async Task CreatePipelineAsync(Pipeline pipeline)
     {
@@ -155,7 +158,11 @@ public class PipelineRepository : IPipelineRepository
             StartTime = pipelineExecution.StartTime,
             EndTime = pipelineExecution.EndTime,
             Success = pipelineExecution.Success,
-            CommitTitles = pipelineExecution.CommitTitles?.Select(c => c.Title).ToList(),
+            CommitTitles = pipelineExecution.CommitTitles.Select(c => new CommitTitleView()
+            {
+                Title = c.Title,
+                CommitUrl = c.CommitUrl
+            }).ToList(),
             StepExecutions = pipelineExecution.StepExecutions?.Select(s => new PipelineStepExecutionView
             {
                 Id = s.Id,

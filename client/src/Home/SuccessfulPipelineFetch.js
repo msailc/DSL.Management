@@ -16,23 +16,17 @@ export default function SuccessfulPipelineFetch() {
       .get("http://localhost:5017/pipeline/executions?success=true")
       .then((res) => {
         console.log(res);
-        const uniquePipelines = removeDuplicatePipelines(res.data.$values);
-        console.log("Unique Pipelines:", uniquePipelines);
-        getPipelines(uniquePipelines);
+        getPipelines(
+          Array.isArray(res.data.$values)
+            ? res.data.$values.map((pipeline) => ({
+                ...pipeline,
+                collapsed: true,
+              }))
+            : []
+        );
       })
       .catch((err) => console.log(err));
   }, []);
-
-  const removeDuplicatePipelines = (pipelineExecutions) => {
-    const pipelineIdSet = new Set(); // Track encountered pipeline IDs
-    return pipelineExecutions.filter((pipeline) => {
-      if (!pipelineIdSet.has(pipeline.pipelineId)) {
-        pipelineIdSet.add(pipeline.pipelineId);
-        return true;
-      }
-      return false;
-    });
-  };
 
   const togglePipeline = (id) => {
     getPipelines((prevPipelines) =>
@@ -48,7 +42,7 @@ export default function SuccessfulPipelineFetch() {
     const url = `http://localhost:5017/pipeline/${pipelineId}/execute`;
     console.log(pipelineId, gitUrl);
     const headers = {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json", 
     };
     const payload = {
       gitUrl: gitUrl,
@@ -82,27 +76,8 @@ export default function SuccessfulPipelineFetch() {
               ))}
             </ul>
           )}
-          {!pipeline.collapsed && (
-            <form
-              onSubmit={(event) => handleSubmit(event, pipeline.pipelineId)}
-            >
-              <label>
-                GitUrl:
-                <input
-                  type="text"
-                  value={gitUrl}
-                  onChange={(e) => setGitUrl(e.target.value)}
-                  required
-                />
-              </label>
-              <div>
-                <Console />
-              </div>
-              <button type="submit">Execute</button>
-            </form>
-          )}
         </div>
       ))}
     </div>
   );
-}
+} 

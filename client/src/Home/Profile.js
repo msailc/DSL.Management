@@ -1,8 +1,7 @@
-
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './Profile.css';
-import axios from "axios";
-import UserPipelineFetch from "./UserPipelineFetch";
+import axios from 'axios';
+import UserPipelineFetch from './UserPipelineFetch';
 
 export default function Profile() {
     const user = {
@@ -16,17 +15,14 @@ export default function Profile() {
 
     const fetchData = async () => {
         try {
-            const username = localStorage.getItem("username");
-            const response = await axios.get(
-                `http://localhost:5017/user/username/${username}`
-            );
+            const username = localStorage.getItem('username');
+            const response = await axios.get(`http://localhost:5017/user/username/${username}`);
             const {
                 pipelinesCount,
                 pipelineStepsCount,
                 successPipelinesCount,
-                failedPipelinesCount
+                failedPipelinesCount,
             } = response.data;
-            console.log(response.data);
 
             setPipelinesCount(pipelinesCount);
             setPipelineStepsCount(pipelineStepsCount);
@@ -34,7 +30,7 @@ export default function Profile() {
             setUnsuccessfulPipelinesCount(failedPipelinesCount);
         } catch (error) {
             // Handle error
-            console.error("Error fetching user data:", error);
+            console.error('Error fetching user data:', error);
         }
     };
 
@@ -42,8 +38,8 @@ export default function Profile() {
         fetchData();
     }, []);
 
-    var username = localStorage.getItem("username")?.split("@")[0]
-    var email = localStorage.getItem("username");
+    var username = localStorage.getItem('username')?.split('@')[0];
+    var email = localStorage.getItem('username');
 
     return (
         <div className="profile-container">
@@ -57,17 +53,19 @@ export default function Profile() {
             <div className="divider"></div>
             <div className="title-container">
                 <div className="title">Pipelines Created: {pipelinesCount}</div>
-                <div className="title">Number of pipeline steps:{pipelineStepsCount}</div>
+                <div className="title">Number of pipeline steps: {pipelineStepsCount}</div>
             </div>
             <div className="title-container">
-                <div className="title">successful pipelines:{successfulPipelinesCount}</div>
-                <div className="title">unsuccessful pipelines:{unsuccessfulPipelinesCount}</div>
+                <div className="title">Successful pipelines: {successfulPipelinesCount}</div>
+                <div className="title">Unsuccessful pipelines: {unsuccessfulPipelinesCount}</div>
             </div>
             <div className="divider"></div>
-            <div>
             <h2>My pipelines:</h2>
-            <UserPipelineFetch/>
+            <div className="title-container">
+            <div className="user-pipelines-container">
+                <UserPipelineFetch />
             </div>
+        </div>
         </div>
     );
 }

@@ -81,8 +81,8 @@ const PipelineModal = () => {
 
   return (
     <div>
-      <div className="modal show"> {/* Dodajte klasu "show" za prikaz modala */}
-        <div className="modal-content"> {/* Dodajte klasu "modal-content" za sadržaj modala */}
+      <div className="modal show">
+        <div className="modal-content">
           <h2>Create New Pipeline</h2>
           <form onSubmit={handleSubmit}>
             <div>
@@ -103,7 +103,11 @@ const PipelineModal = () => {
                       <li key={index}>{command}</li>
                     ))}
                   </ul>
-                  <button type="button" onClick={deleteLastCommandHandler}>
+                  <button
+                    type="button"
+                    onClick={deleteLastCommandHandler}
+                    className="pipeline-button"
+                  >
                     -
                   </button>
                 </div>
@@ -114,12 +118,21 @@ const PipelineModal = () => {
                 value={pipelineCommands}
                 onChange={handlePipelineCommandsChange}
               />
-              <button type="button" onClick={addCommandHandler}>
+              <button
+                type="button"
+                onClick={addCommandHandler}
+                className="pipeline-button"
+              >
                 +
               </button>
             </div>
             <div>
-              <button type="submit">Create Pipeline</button>
+              <button
+                type="submit"
+                className="name-button"
+              >
+                Create Pipeline
+              </button>
             </div>
           </form>
         </div>

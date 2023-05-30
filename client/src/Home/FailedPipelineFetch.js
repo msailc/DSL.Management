@@ -3,7 +3,7 @@ import axios from "axios";
 import Console from "../Console";
 
 export default function FailedPipelineFetch() {
-  const [pipelines, setPipelines] = useState([]);
+  const [pipelines, getPipelines] = useState([]);
   const [gitUrl, setGitUrl] = useState("");
 
   const handleSubmit = (event, pipelineId) => {
@@ -16,28 +16,20 @@ export default function FailedPipelineFetch() {
       .get("http://localhost:5017/pipeline/executions?success=false")
       .then((res) => {
         console.log(res);
-        const uniquePipelines = removeDuplicatePipelines(res.data.$values);
-        console.log("Unique Pipelines:", uniquePipelines);
-        setPipelines(uniquePipelines);
+        getPipelines(
+          Array.isArray(res.data.$values)
+            ? res.data.$values.map((pipeline) => ({
+                ...pipeline,
+                collapsed: true,
+              }))
+            : []
+        );
       })
       .catch((err) => console.log(err));
   }, []);
 
-  const removeDuplicatePipelines = (pipelineExecutions) => {
-    const uniquePipelines = {};
-    pipelineExecutions.forEach((pipeline) => {
-      if (!uniquePipelines[pipeline.pipelineId]) {
-        uniquePipelines[pipeline.pipelineId] = {
-          ...pipeline,
-          collapsed: true,
-        };
-      }
-    });
-    return Object.values(uniquePipelines);
-  };
-
   const togglePipeline = (id) => {
-    setPipelines((prevPipelines) =>
+    getPipelines((prevPipelines) =>
       prevPipelines.map((pipeline) =>
         pipeline.id === id
           ? { ...pipeline, collapsed: !pipeline.collapsed }
@@ -50,7 +42,7 @@ export default function FailedPipelineFetch() {
     const url = `http://localhost:5017/pipeline/${pipelineId}/execute`;
     console.log(pipelineId, gitUrl);
     const headers = {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json", // Specify the content type as JSON
     };
     const payload = {
       gitUrl: gitUrl,
@@ -115,25 +107,6 @@ export default function FailedPipelineFetch() {
                 </li>
               ))}
             </ul>
-          )}
-          {!pipeline.collapsed && (
-            <form
-              onSubmit={(event) => handleSubmit(event, pipeline.pipelineId)}
-            >
-              <label>
-                GitUrl:
-                <input
-                  type="text"
-                  value={gitUrl}
-                  onChange={(e) => setGitUrl(e.target.value)}
-                  required
-                />
-              </label>
-              <div>
-                <Console />
-              </div>
-              <button type="submit">Execute</button>
-            </form>
           )}
         </div>
       ))}
