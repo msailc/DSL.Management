@@ -123,7 +123,7 @@ public class PipelineService : IPipelineService
         {
             Id = Guid.NewGuid(),
             Title = commit.Item1,
-            Link = commit.Item2
+            CommitUrl = commit.Item2,
         }).ToList();
 
 

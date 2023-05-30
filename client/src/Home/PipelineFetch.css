@@ -41,7 +41,6 @@
 }
 
 .execution-results {
-    font-weight: bold;
     margin-bottom: 10px;
 }
 
@@ -65,7 +64,6 @@
 .console-right-side {
     flex: 1;
     margin-left: 10px;
-    font-weight: bold;
 }
 
 .form-row {
@@ -98,4 +96,38 @@
     max-height: 200px; /* Set the desired fixed height for the console */
 }
 
+.execution-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
 
+.green-dot {
+    background-color: green;
+}
+
+.red-dot {
+    background-color: red;
+}
+
+.execute-button {
+    background-color: #019103 !important;
+    border: 1px solid black !important;
+    cursor: pointer !important;
+    width: 100% !important;
+    text-align: center !important;
+    border-radius: 5px; /* Adjust border radius */
+    max-width: 100px; /* Adjust max width */
+    max-height: 30px; /* Adjust max height */
+    color: white; /* Add text color */
+    font-family: Arial, sans-serif; /* Add font family */
+    font-size: 16px; /* Add font size */
+    transition: background-color 0.3s, color 0.3s; /* Add transition effect */
+}
+
+.execute-button:hover {
+    background-color: #036a02 !important;
+    color: #f1f1f1 !important;
+}
