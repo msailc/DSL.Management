@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./PipelineFetch.css"; // Import the CSS file
 import Console from "../Console";
+import { BiLinkExternal } from 'react-icons/bi';
 
 export default function PipelineFetch() {
     const [pipelines, getPipelines] = useState([]);
     const [selectedPipelineId, setSelectedPipelineId] = useState(null);
     const [showConsole, setShowConsole] = useState(false);
     const [executionData, setExecutionData] = useState(null);
+    const [expandedErrorId, setExpandedErrorId] = useState(null);
 
     useEffect(() => {
         axios
@@ -29,6 +31,8 @@ export default function PipelineFetch() {
 
     const togglePipeline = (id) => {
         setSelectedPipelineId((prevId) => (prevId === id ? null : id));
+        setShowConsole(false); // Reset showConsole state
+        setExecutionData(null); // Clear executionData state
         getPipelines((prevPipelines) =>
             prevPipelines.map((pipeline) =>
                 pipeline.id === id
@@ -38,12 +42,17 @@ export default function PipelineFetch() {
         );
     };
 
-    const handleExecutePipelineClick = (pipelineId, gitUrl, deleteRepository) => {
-        const deleteRepositoryQuery = deleteRepository ? 'true' : 'false';
+
+    const handleExecutePipelineClick = (
+        pipelineId,
+        gitUrl,
+        deleteRepository
+    ) => {
+        const deleteRepositoryQuery = deleteRepository ? "true" : "false";
         const url = `http://localhost:5017/pipeline/${pipelineId}/execute?deleteRepositoryAfterExecution=${deleteRepositoryQuery}`;
 
         const headers = {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json"
         };
 
         const payload = {
@@ -55,12 +64,12 @@ export default function PipelineFetch() {
         axios
             .post(url, payload, { headers })
             .then((res) => {
-                console.log('POST request successful');
+                console.log("POST request successful");
                 console.log(res);
                 setExecutionData(res.data); // Store the execution data
             })
             .catch((err) => {
-                console.error('Error occurred during POST request:', err);
+                console.error("Error occurred during POST request:", err);
             });
     };
 
@@ -68,11 +77,12 @@ export default function PipelineFetch() {
         const deleteRepository = event.target.checked;
         getPipelines((prevPipelines) =>
             prevPipelines.map((pipeline) =>
-                pipeline.id === pipelineId ? { ...pipeline, deleteRepository } : pipeline
+                pipeline.id === pipelineId
+                    ? { ...pipeline, deleteRepository }
+                    : pipeline
             )
         );
     };
-
 
     const handleGitUrlChange = (pipelineId, event) => {
         const gitUrl = event.target.value;
@@ -90,7 +100,9 @@ export default function PipelineFetch() {
             .then((res) => {
                 const expandedPipeline = res.data;
                 const updatedPipelines = pipelines.map((pipeline) =>
-                    pipeline.id === pipelineId ? { ...pipeline, ...expandedPipeline } : pipeline
+                    pipeline.id === pipelineId
+                        ? { ...pipeline, ...expandedPipeline }
+                        : pipeline
                 );
                 getPipelines(updatedPipelines);
                 console.log(res);
@@ -102,6 +114,10 @@ export default function PipelineFetch() {
         if (selectedPipelineId) {
             fetchPipelineData(selectedPipelineId);
         }
+        return () => {
+            setShowConsole(false); // Reset showConsole state
+            setExecutionData(null); // Clear executionData state
+        };
     }, [selectedPipelineId]);
 
     useEffect(() => {
@@ -123,6 +139,12 @@ export default function PipelineFetch() {
         };
     }, []);
 
+    useEffect(() => {
+        if (executionData) {
+            fetchPipelineData(selectedPipelineId);
+        }
+    }, [executionData]);
+
     return (
         <div className="pipeline-container-wrapper">
             <div className="pipeline-container">
@@ -137,7 +159,7 @@ export default function PipelineFetch() {
                         {!pipeline.collapsed && (
                             <div className="pipeline-details">
                                 <div className="left-side">
-                                    <div>Author: {pipeline.userId}</div>
+                                    <div>Author: {pipeline.userName}</div>
 
                                     Pipeline execution steps
                                     <ul>
@@ -148,7 +170,11 @@ export default function PipelineFetch() {
                                     <form
                                         onSubmit={(event) => {
                                             event.preventDefault();
-                                            handleExecutePipelineClick(pipeline.id, pipeline.gitUrl, pipeline.deleteRepository);
+                                            handleExecutePipelineClick(
+                                                pipeline.id,
+                                                pipeline.gitUrl,
+                                                pipeline.deleteRepository
+                                            );
                                         }}
                                     >
                                         <div className="form-row">
@@ -157,7 +183,9 @@ export default function PipelineFetch() {
                                                 <input
                                                     type="text"
                                                     value={pipeline.gitUrl}
-                                                    onChange={(event) => handleGitUrlChange(pipeline.id, event)}
+                                                    onChange={(event) =>
+                                                        handleGitUrlChange(pipeline.id, event)
+                                                    }
                                                 />
                                             </label>
                                             <button className="execute-button">Execute</button>
@@ -167,7 +195,9 @@ export default function PipelineFetch() {
                                             <input
                                                 type="checkbox"
                                                 checked={pipeline.deleteRepository}
-                                                onChange={(event) => handleDeleteRepositoryChange(pipeline.id, event)}
+                                                onChange={(event) =>
+                                                    handleDeleteRepositoryChange(pipeline.id, event)
+                                                }
                                             />
                                         </label>
                                     </form>
@@ -178,26 +208,36 @@ export default function PipelineFetch() {
                                         <div>
                                             <div className="execution-results">
                                                 Recent executions of this pipeline:{" "}
-                                                {pipeline.lastExecutions.$values.map((execution) =>
-                                                    execution.success ? "T" : "F"
-                                                ).join(" ")}
+                                                {pipeline.lastExecutions.$values.map((execution) => (
+                                                    <span
+                                                        key={execution.id}
+                                                        className={`execution-dot ${
+                                                            execution.success ? "green-dot" : "red-dot"
+                                                        }`}
+                                                    />
+                                                ))}
                                             </div>
                                             <div className="last-commits">
-                                                Last 5 commits on last execution state of repository:
+                                                Last 5 commits on the last execution state of the repository:
                                                 <ul>
                                                     {pipeline.lastExecutions.$values[0].commitTitles.$values
                                                         .slice(0, 5)
-                                                        .map((title, index) => (
-                                                            <li key={index}>{title}</li>
+                                                        .map((commit, index) => (
+                                                            <li key={index}>
+                                                                <a href={commit.commitUrl} target="_blank" rel="noopener noreferrer">
+                                                                    {commit.title} <BiLinkExternal />
+                                                                </a>
+                                                            </li>
                                                         ))}
                                                 </ul>
                                             </div>
+
                                             <div className="execution-timestamps">
                                                 Start Time:{" "}
                                                 {new Date(
                                                     pipeline.lastExecutions.$values[0].startTime
-                                                ).toLocaleString()},{" "}
-                                                End Time:{" "}
+                                                ).toLocaleString()}
+                                                , End Time:{" "}
                                                 {new Date(
                                                     pipeline.lastExecutions.$values[0].endTime
                                                 ).toLocaleString()}
@@ -215,10 +255,34 @@ export default function PipelineFetch() {
                                     <Console />
                                 </div>
                                 <div className="console-right-side">
-                                    Pipeline execution result
+                                    <strong>Pipeline execution result</strong>
+                                    {executionData && executionData.stepResults && (
+                                        <>
+                                            <ul className="step-results-list">
+                                                {executionData.stepResults.$values.map((stepResult) => (
+                                                    <li key={stepResult.$id}>
+                                                        <span className="command">{stepResult.command}</span>
+                                                        {stepResult.success ? (
+                                                            <span className="execution-dot green-dot"></span>
+                                                        ) : (
+                                                            <span className="execution-dot red-dot"></span>
+                                                        )}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            {executionData.stepResults.$values.every((stepResult) => stepResult.success) ? (
+                                                <div>Pipeline execution was successful</div>
+                                            ) : (
+                                                <div>Pipeline execution was unsuccessful</div>
+
+                                            )}
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         )}
+
+
                     </div>
                 ))}
             </div>

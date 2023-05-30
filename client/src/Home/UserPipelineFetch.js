@@ -78,25 +78,6 @@ export default function UserPipelines() {
               {pipeline.steps.$values.map((step) => (
                 <li key={step.stepId}>Command: {step.command}</li>
               ))}
-              <form
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  handleExecutePipelineClick(pipeline.pipelineId, pipeline.gitUrl);
-                }}
-              >
-                <label>
-                  gitUrl:
-                  <input
-                    type="text"
-                    value={pipeline.gitUrl}
-                    onChange={(event) => handleGitUrlChange(pipeline.pipelineId, event)}
-                  />
-                </label>
-                <div>
-                  <Console />
-                </div>
-                <button type="submit">Execute</button>
-              </form>
             </ul>
           )}
         </div>

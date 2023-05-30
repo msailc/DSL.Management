@@ -108,25 +108,6 @@ export default function FailedPipelineFetch() {
               ))}
             </ul>
           )}
-          {!pipeline.collapsed && (
-            <form
-              onSubmit={(event) => handleSubmit(event, pipeline.pipelineId)}
-            >
-              <label>
-                GitUrl:
-                <input
-                  type="text"
-                  value={gitUrl}
-                  onChange={(e) => setGitUrl(e.target.value)}
-                  required
-                />
-              </label>
-              <div>
-                <Console />
-              </div>
-              <button type="submit">Execute</button>
-            </form>
-          )}
         </div>
       ))}
     </div>
