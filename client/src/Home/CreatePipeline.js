@@ -38,7 +38,7 @@ const PipelineModal = () => {
     try {
       const payload = {
         name: name,
-        userId: localStorage.getItem("userID"),
+        userId: localStorage.getItem('userID'),
         steps: existingCommands.map((command) => ({
           command: command,
           parameters: [],
@@ -80,13 +80,16 @@ const PipelineModal = () => {
   };
 
   return (
-    <div>
-      <div className="modal show">
-        <div className="modal-content">
-          <h2>Create New Pipeline</h2>
+    <div className="container">
+      <div className="card">
+        <div className="modal show">
+          <div className="modal-content" style={{ style:"max-height: 542px;" }}>
+          <h2 style={{ color: 'white' }}>Create New Pipeline</h2>
           <form onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="name">Name:</label>
+              <label htmlFor="name" style={{ color: 'white' }}>
+                Name:
+              </label>
               <input
                 type="text"
                 id="name"
@@ -95,7 +98,9 @@ const PipelineModal = () => {
               />
             </div>
             <div>
-              <label htmlFor="pipelineCommands">Pipeline Commands:</label>
+              <label htmlFor="pipelineCommands" style={{ color: 'white' }}>
+                Pipeline Commands:
+              </label>
               {showCommands && (
                 <div>
                   <ul>
@@ -106,7 +111,8 @@ const PipelineModal = () => {
                   <button
                     type="button"
                     onClick={deleteLastCommandHandler}
-                    className="pipeline-button"
+                    className="modal-button"
+                    style={{ width: '30px', padding: '4px' }}
                   >
                     -
                   </button>
@@ -121,22 +127,21 @@ const PipelineModal = () => {
               <button
                 type="button"
                 onClick={addCommandHandler}
-                className="pipeline-button"
+                className="modal-button"
+                style={{ width: '30px', padding: '4px' }}
               >
                 +
               </button>
             </div>
             <div>
-              <button
-                type="submit"
-                className="name-button"
-              >
+              <button type="submit" className="modal-button">
                 Create Pipeline
               </button>
             </div>
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 };
