@@ -93,7 +93,7 @@
     font-family: monospace;
     padding: 10px;
     height: 200px;
-    max-height: 200px; /* Set the desired fixed height for the console */
+    max-height: 200px; 
 }
 
 .execution-dot {
@@ -113,19 +113,23 @@
 }
 
 .execute-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #019103 !important;
     border: 1px solid black !important;
     cursor: pointer !important;
     width: 100% !important;
     text-align: center !important;
-    border-radius: 5px; /* Adjust border radius */
-    max-width: 100px; /* Adjust max width */
-    max-height: 30px; /* Adjust max height */
-    color: white; /* Add text color */
-    font-family: Arial, sans-serif; /* Add font family */
-    font-size: 16px; /* Add font size */
-    transition: background-color 0.3s, color 0.3s; /* Add transition effect */
+    border-radius: 5px;
+    max-width: 100px;
+    max-height: 30px;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
 }
+
 
 .execute-button:hover {
     background-color: #036a02 !important;

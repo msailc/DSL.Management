@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Console from "../Console";
+import './FailedPipelineFetch.css';
 
 export default function FailedPipelineFetch() {
   const [pipelines, getPipelines] = useState([]);
@@ -75,16 +76,22 @@ export default function FailedPipelineFetch() {
       return (
         <div>
           <span>Error Message: {message.substring(0, 30)}...</span>
-          <button onClick={toggleShowFullMessage}>Show Full Message</button>
+          <button className="show-full-message" onClick={toggleShowFullMessage}>
+            Show Full Message
+          </button>
         </div>
       );
     } else if (showFullMessage) {
       return (
         <div>
-          <span>Error Message: {message}</span>
-          <button onClick={toggleShowLessMessage}>Show Less</button>
+          <span className="error-message">Error Message: {message}</span>
+          <button className="show-full-message" onClick={toggleShowLessMessage}>
+            Show Less
+          </button>
         </div>
       );
+      
+      
     } else {
       return <span>Error Message: {message}</span>;
     }
@@ -94,7 +101,7 @@ export default function FailedPipelineFetch() {
     <div className="pipeline-container">
       {pipelines.map((pipeline) => (
         <div key={pipeline.id} className="pipeline">
-          <button onClick={() => togglePipeline(pipeline.id)}>
+          <button className="pipeline-button" onClick={() => togglePipeline(pipeline.id)}>
             {pipeline.pipelineName}
           </button>
           {!pipeline.collapsed && (

@@ -1,0 +1,79 @@
+.pipeline-container {
+    margin-top: 20px;
+  }
+  
+  .pipeline {
+    margin-bottom: 10px;
+  }
+  
+  .pipeline button {
+    background-color: #393E46;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .pipeline li .show-full-message {
+    background-color: #393E46;
+    color: #fff;
+    padding: 5px 20px;
+    font-size: 14px;
+    margin-left: 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+    max-width: fit-content;
+  }
+
+  
+  .pipeline-button,
+  .pipeline li .show-full-message {
+    height: 30px;
+    line-height: 1;
+    margin-left: 20px;
+  }
+  
+  .pipeline-button:hover {
+    background-color: #333333;
+  }
+  
+  .pipeline-button:active {
+    background-color: #2C3037;
+  }
+  
+  .pipeline ul {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 20px;
+  }
+  
+  .pipeline li {
+    margin-bottom: 5px;
+  }
+  
+  .pipeline li span {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  .pipeline li .error-message {
+    margin-top: 5px;
+  }
+  
+  .pipeline li .error-message-content {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .error-message {
+    color: red;
+  }
+  
+  
+  

@@ -1,3 +1,4 @@
+
 .App {
   text-align: center;
 
@@ -67,7 +68,7 @@ text-decoration-style: white ;
 }
 .dsl-management {
   background-color: black;
-  color: blue;
+  color: white;
   font-size: 36px;
   font-weight: bold;
   padding: 20px;
@@ -192,5 +193,4 @@ nav {
 .user-icon {
   margin-right: 10px; 
 }
-
 
